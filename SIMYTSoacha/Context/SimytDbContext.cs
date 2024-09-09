@@ -5,10 +5,7 @@ namespace SIMYTSoacha.Context
 {
     public class SimytDbContext : DbContext
     {
-        public SimytDbContext(DbContextOptions options) : base(options)
-        {
-            
-        }
+        public SimytDbContext(DbContextOptions options) : base(options) { }
         public DbSet<People> Peoples { get; set; }
         public DbSet<Requests> Requests { get; set; }
         public DbSet<Managers> Managers { get; set; }
