@@ -6,7 +6,7 @@ namespace SIMYTSoacha.Model
     [Table("Histories")]
     public class Histories
     {
-        [Key]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int HistorieId { get; set; }
         [MaxLength(50)]
         public string? Name { get; set; }

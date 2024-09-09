@@ -9,6 +9,6 @@ namespace SIMYTSoacha.Model
         [Key]
         public int TservicesId { get; set; }
         [MaxLength(50)]
-        public string? TservicesName { get; set; }
+        public required string TservicesName { get; set; }
     }
 }

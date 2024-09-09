@@ -3,12 +3,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SIMYTSoacha.Model
 {
-    [Table("Infractions")]
-    public class Infractions
+    [Table("DocumentsTypes")]
+    public class DocumentsTypes
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int InfractionId { get; set; }
+        public int DtypesId { get; set; }
         [MaxLength(50)]
-        public required string InfractionName { get; set; }
+        public required string Dtype { get; set; }
     }
 }

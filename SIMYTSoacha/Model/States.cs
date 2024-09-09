@@ -9,6 +9,6 @@ namespace SIMYTSoacha.Model
         [Key]
         public int StateId { get; set; }
         [MaxLength(50)]
-        public string? StatesName { get; set; }
+        public required string StatesName { get; set; }
     }
 }
