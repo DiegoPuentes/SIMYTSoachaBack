@@ -12,12 +12,12 @@ namespace SIMYTSoacha.Model
         public required string Plate {  get; set; }
         public int VstatesId { get; set; }
         //This method is for the relationship of vehicle state 
-        public virtual required States States { get; set; }
+        public virtual States States { get; set; }
         public int TserviceId { get; set; }
-        public virtual required TypesServices Services { get; set; }
+        public virtual TypesServices Services { get; set; }
         public int TvehicleId { get; set; }
         //Missing invoke the method of the class TypesVehicles
         public int ProcedureId { get; set; }
-        public virtual required Procedures Procedures { get; set; }
+        public virtual Procedures Procedures { get; set; }
     }
 }

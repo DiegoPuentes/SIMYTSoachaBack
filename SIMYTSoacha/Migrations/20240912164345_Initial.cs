@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SIMYTSoacha.Migrations
 {
     /// <inheritdoc />
-    public partial class configDb : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -43,8 +43,8 @@ namespace SIMYTSoacha.Migrations
                 {
                     HistorieId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    Lname = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Lname = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     DtypeId = table.Column<int>(type: "int", nullable: false),
                     Sex = table.Column<string>(type: "nvarchar(2)", maxLength: 2, nullable: false),
                     DateBirth = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -161,6 +161,32 @@ namespace SIMYTSoacha.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "UsersXPermissions",
+                columns: table => new
+                {
+                    UpermissionId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UtypeId = table.Column<int>(type: "int", nullable: false),
+                    PermissionId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UsersXPermissions", x => x.UpermissionId);
+                    table.ForeignKey(
+                        name: "FK_UsersXPermissions_Permissions_PermissionId",
+                        column: x => x.PermissionId,
+                        principalTable: "Permissions",
+                        principalColumn: "Pid",
+                        onDelete: ReferentialAction.NoAction);
+                    table.ForeignKey(
+                        name: "FK_UsersXPermissions_UsersTypes_UtypeId",
+                        column: x => x.UtypeId,
+                        principalTable: "UsersTypes",
+                        principalColumn: "UtypesId",
+                        onDelete: ReferentialAction.NoAction);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "People",
                 columns: table => new
                 {
@@ -172,7 +198,7 @@ namespace SIMYTSoacha.Migrations
                     Ndocument = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Sex = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DateBirth = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserTypeXPermission = table.Column<int>(type: "int", nullable: false)
+                    UserTypeXPermissionId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -182,34 +208,13 @@ namespace SIMYTSoacha.Migrations
                         column: x => x.DtypeId,
                         principalTable: "DocumentsTypes",
                         principalColumn: "DtypesId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "UsersXPermissions",
-                columns: table => new
-                {
-                    UpermissionId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UtypeId = table.Column<int>(type: "int", nullable: false),
-                    PermissionId = table.Column<int>(type: "int", nullable: false),
-                    Permission = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UsersXPermissions", x => x.UpermissionId);
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
-                        name: "FK_UsersXPermissions_Permissions_Permission",
-                        column: x => x.Permission,
-                        principalTable: "Permissions",
-                        principalColumn: "Pid",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_UsersXPermissions_UsersTypes_UtypeId",
-                        column: x => x.UtypeId,
-                        principalTable: "UsersTypes",
-                        principalColumn: "UtypesId",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_People_UsersXPermissions_UserTypeXPermissionId",
+                        column: x => x.UserTypeXPermissionId,
+                        principalTable: "UsersXPermissions",
+                        principalColumn: "UpermissionId",
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateTable(
@@ -219,7 +224,6 @@ namespace SIMYTSoacha.Migrations
                     ContactId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     TcontactId = table.Column<int>(type: "int", nullable: false),
-                    TypesContactsTcontactId = table.Column<int>(type: "int", nullable: false),
                     PeopleId = table.Column<int>(type: "int", nullable: false),
                     Contact = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
                 },
@@ -231,13 +235,13 @@ namespace SIMYTSoacha.Migrations
                         column: x => x.PeopleId,
                         principalTable: "People",
                         principalColumn: "PeopleId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
-                        name: "FK_Contacts_TypesContacts_TypesContactsTcontactId",
-                        column: x => x.TypesContactsTcontactId,
+                        name: "FK_Contacts_TypesContacts_TcontactId",
+                        column: x => x.TcontactId,
                         principalTable: "TypesContacts",
                         principalColumn: "TcontactId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateTable(
@@ -247,8 +251,7 @@ namespace SIMYTSoacha.Migrations
                     ManagersId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     PeopleId = table.Column<int>(type: "int", nullable: false),
-                    UserTypeXPermission = table.Column<int>(type: "int", nullable: false),
-                    UsersXPermissionsUpermissionId = table.Column<int>(type: "int", nullable: false)
+                    UserTypeXPermissionId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -258,13 +261,13 @@ namespace SIMYTSoacha.Migrations
                         column: x => x.PeopleId,
                         principalTable: "People",
                         principalColumn: "PeopleId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
-                        name: "FK_Managers_UsersXPermissions_UsersXPermissionsUpermissionId",
-                        column: x => x.UsersXPermissionsUpermissionId,
+                        name: "FK_Managers_UsersXPermissions_UserTypeXPermissionId",
+                        column: x => x.UserTypeXPermissionId,
                         principalTable: "UsersXPermissions",
                         principalColumn: "UpermissionId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateTable(
@@ -275,24 +278,23 @@ namespace SIMYTSoacha.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     PeopleId = table.Column<int>(type: "int", nullable: false),
                     Request = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ManagerId = table.Column<int>(type: "int", nullable: false),
-                    ManagersId = table.Column<int>(type: "int", nullable: false)
+                    ManagerId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Requests", x => x.RequestId);
                     table.ForeignKey(
-                        name: "FK_Requests_Managers_ManagersId",
-                        column: x => x.ManagersId,
+                        name: "FK_Requests_Managers_ManagerId",
+                        column: x => x.ManagerId,
                         principalTable: "Managers",
                         principalColumn: "ManagersId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
                         name: "FK_Requests_People_PeopleId",
                         column: x => x.PeopleId,
                         principalTable: "People",
                         principalColumn: "PeopleId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateTable(
@@ -315,13 +317,13 @@ namespace SIMYTSoacha.Migrations
                         column: x => x.RequestsRequestId,
                         principalTable: "Requests",
                         principalColumn: "RequestId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
                         name: "FK_Procedures_States_StatesStateId",
                         column: x => x.StatesStateId,
                         principalTable: "States",
                         principalColumn: "StateId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateTable(
@@ -332,42 +334,38 @@ namespace SIMYTSoacha.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Nlicense = table.Column<int>(type: "int", nullable: false),
                     EcenterId = table.Column<int>(type: "int", nullable: false),
-                    EcentersEcenterId = table.Column<int>(type: "int", nullable: false),
                     DateIssue = table.Column<DateTime>(type: "datetime2", nullable: false),
                     StateId = table.Column<int>(type: "int", nullable: false),
-                    StatesStateId = table.Column<int>(type: "int", nullable: false),
                     RestrictionId = table.Column<int>(type: "int", nullable: false),
-                    RestrictionsRestrictionId = table.Column<int>(type: "int", nullable: false),
-                    ProcedureId = table.Column<int>(type: "int", nullable: false),
-                    ProceduresProcedureId = table.Column<int>(type: "int", nullable: false)
+                    ProcedureId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_DriverLicenses", x => x.DriverLicenseId);
                     table.ForeignKey(
-                        name: "FK_DriverLicenses_ExpeditionsCenters_EcentersEcenterId",
-                        column: x => x.EcentersEcenterId,
+                        name: "FK_DriverLicenses_ExpeditionsCenters_EcenterId",
+                        column: x => x.EcenterId,
                         principalTable: "ExpeditionsCenters",
                         principalColumn: "EcenterId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
-                        name: "FK_DriverLicenses_Procedures_ProceduresProcedureId",
-                        column: x => x.ProceduresProcedureId,
+                        name: "FK_DriverLicenses_Procedures_ProcedureId",
+                        column: x => x.ProcedureId,
                         principalTable: "Procedures",
                         principalColumn: "ProcedureId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
-                        name: "FK_DriverLicenses_Restrictions_RestrictionsRestrictionId",
-                        column: x => x.RestrictionsRestrictionId,
+                        name: "FK_DriverLicenses_Restrictions_RestrictionId",
+                        column: x => x.RestrictionId,
                         principalTable: "Restrictions",
                         principalColumn: "RestrictionId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
-                        name: "FK_DriverLicenses_States_StatesStateId",
-                        column: x => x.StatesStateId,
+                        name: "FK_DriverLicenses_States_StateId",
+                        column: x => x.StateId,
                         principalTable: "States",
                         principalColumn: "StateId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateTable(
@@ -377,79 +375,37 @@ namespace SIMYTSoacha.Migrations
                     FinesId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     InfractionId = table.Column<int>(type: "int", nullable: false),
-                    InfractionsInfractionId = table.Column<int>(type: "int", nullable: false),
                     MimpositionId = table.Column<int>(type: "int", nullable: false),
-                    MimpositionsMimpositionId = table.Column<int>(type: "int", nullable: false),
                     ManagerId = table.Column<int>(type: "int", nullable: false),
-                    ManagersId = table.Column<int>(type: "int", nullable: false),
-                    ProcedureId = table.Column<int>(type: "int", nullable: false),
-                    ProceduresProcedureId = table.Column<int>(type: "int", nullable: false)
+                    ProcedureId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Fines", x => x.FinesId);
                     table.ForeignKey(
-                        name: "FK_Fines_Infractions_InfractionsInfractionId",
-                        column: x => x.InfractionsInfractionId,
+                        name: "FK_Fines_Infractions_InfractionId",
+                        column: x => x.InfractionId,
                         principalTable: "Infractions",
                         principalColumn: "InfractionId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
-                        name: "FK_Fines_Managers_ManagersId",
-                        column: x => x.ManagersId,
+                        name: "FK_Fines_Managers_ManagerId",
+                        column: x => x.ManagerId,
                         principalTable: "Managers",
                         principalColumn: "ManagersId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
-                        name: "FK_Fines_Mimpositions_MimpositionsMimpositionId",
-                        column: x => x.MimpositionsMimpositionId,
+                        name: "FK_Fines_Mimpositions_MimpositionId",
+                        column: x => x.MimpositionId,
                         principalTable: "Mimpositions",
                         principalColumn: "MimpositionId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
-                        name: "FK_Fines_Procedures_ProceduresProcedureId",
-                        column: x => x.ProceduresProcedureId,
+                        name: "FK_Fines_Procedures_ProcedureId",
+                        column: x => x.ProcedureId,
                         principalTable: "Procedures",
                         principalColumn: "ProcedureId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "TrafficLicenses",
-                columns: table => new
-                {
-                    TlicensesId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Plate = table.Column<string>(type: "nvarchar(6)", maxLength: 6, nullable: false),
-                    VstatesId = table.Column<int>(type: "int", nullable: false),
-                    StatesStateId = table.Column<int>(type: "int", nullable: false),
-                    TserviceId = table.Column<int>(type: "int", nullable: false),
-                    ServicesTservicesId = table.Column<int>(type: "int", nullable: false),
-                    TvehicleId = table.Column<int>(type: "int", nullable: false),
-                    ProcedureId = table.Column<int>(type: "int", nullable: false),
-                    ProceduresProcedureId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TrafficLicenses", x => x.TlicensesId);
-                    table.ForeignKey(
-                        name: "FK_TrafficLicenses_Procedures_ProceduresProcedureId",
-                        column: x => x.ProceduresProcedureId,
-                        principalTable: "Procedures",
-                        principalColumn: "ProcedureId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_TrafficLicenses_States_StatesStateId",
-                        column: x => x.StatesStateId,
-                        principalTable: "States",
-                        principalColumn: "StateId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_TrafficLicenses_TypesServices_ServicesTservicesId",
-                        column: x => x.ServicesTservicesId,
-                        principalTable: "TypesServices",
-                        principalColumn: "TservicesId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateIndex(
@@ -458,49 +414,49 @@ namespace SIMYTSoacha.Migrations
                 column: "PeopleId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Contacts_TypesContactsTcontactId",
+                name: "IX_Contacts_TcontactId",
                 table: "Contacts",
-                column: "TypesContactsTcontactId");
+                column: "TcontactId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DriverLicenses_EcentersEcenterId",
+                name: "IX_DriverLicenses_EcenterId",
                 table: "DriverLicenses",
-                column: "EcentersEcenterId");
+                column: "EcenterId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DriverLicenses_ProceduresProcedureId",
+                name: "IX_DriverLicenses_ProcedureId",
                 table: "DriverLicenses",
-                column: "ProceduresProcedureId");
+                column: "ProcedureId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DriverLicenses_RestrictionsRestrictionId",
+                name: "IX_DriverLicenses_RestrictionId",
                 table: "DriverLicenses",
-                column: "RestrictionsRestrictionId");
+                column: "RestrictionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DriverLicenses_StatesStateId",
+                name: "IX_DriverLicenses_StateId",
                 table: "DriverLicenses",
-                column: "StatesStateId");
+                column: "StateId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Fines_InfractionsInfractionId",
+                name: "IX_Fines_InfractionId",
                 table: "Fines",
-                column: "InfractionsInfractionId");
+                column: "InfractionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Fines_ManagersId",
+                name: "IX_Fines_ManagerId",
                 table: "Fines",
-                column: "ManagersId");
+                column: "ManagerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Fines_MimpositionsMimpositionId",
+                name: "IX_Fines_MimpositionId",
                 table: "Fines",
-                column: "MimpositionsMimpositionId");
+                column: "MimpositionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Fines_ProceduresProcedureId",
+                name: "IX_Fines_ProcedureId",
                 table: "Fines",
-                column: "ProceduresProcedureId");
+                column: "ProcedureId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Managers_PeopleId",
@@ -508,14 +464,19 @@ namespace SIMYTSoacha.Migrations
                 column: "PeopleId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Managers_UsersXPermissionsUpermissionId",
+                name: "IX_Managers_UserTypeXPermissionId",
                 table: "Managers",
-                column: "UsersXPermissionsUpermissionId");
+                column: "UserTypeXPermissionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_People_DtypeId",
                 table: "People",
                 column: "DtypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_People_UserTypeXPermissionId",
+                table: "People",
+                column: "UserTypeXPermissionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Procedures_RequestsRequestId",
@@ -528,9 +489,9 @@ namespace SIMYTSoacha.Migrations
                 column: "StatesStateId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Requests_ManagersId",
+                name: "IX_Requests_ManagerId",
                 table: "Requests",
-                column: "ManagersId");
+                column: "ManagerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Requests_PeopleId",
@@ -538,24 +499,9 @@ namespace SIMYTSoacha.Migrations
                 column: "PeopleId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TrafficLicenses_ProceduresProcedureId",
-                table: "TrafficLicenses",
-                column: "ProceduresProcedureId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TrafficLicenses_ServicesTservicesId",
-                table: "TrafficLicenses",
-                column: "ServicesTservicesId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TrafficLicenses_StatesStateId",
-                table: "TrafficLicenses",
-                column: "StatesStateId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UsersXPermissions_Permission",
+                name: "IX_UsersXPermissions_PermissionId",
                 table: "UsersXPermissions",
-                column: "Permission");
+                column: "PermissionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UsersXPermissions_UtypeId",
@@ -579,7 +525,7 @@ namespace SIMYTSoacha.Migrations
                 name: "Histories");
 
             migrationBuilder.DropTable(
-                name: "TrafficLicenses");
+                name: "TypesServices");
 
             migrationBuilder.DropTable(
                 name: "TypesContacts");
@@ -600,9 +546,6 @@ namespace SIMYTSoacha.Migrations
                 name: "Procedures");
 
             migrationBuilder.DropTable(
-                name: "TypesServices");
-
-            migrationBuilder.DropTable(
                 name: "Requests");
 
             migrationBuilder.DropTable(
@@ -615,10 +558,10 @@ namespace SIMYTSoacha.Migrations
                 name: "People");
 
             migrationBuilder.DropTable(
-                name: "UsersXPermissions");
+                name: "DocumentsTypes");
 
             migrationBuilder.DropTable(
-                name: "DocumentsTypes");
+                name: "UsersXPermissions");
 
             migrationBuilder.DropTable(
                 name: "Permissions");

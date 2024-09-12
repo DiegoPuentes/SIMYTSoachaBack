@@ -10,8 +10,8 @@ namespace SIMYTSoacha.Model
         public int ProcedureId { get; set; }
         public int Procedure {  get; set; }
         public int StateId { get; set; }
-        public virtual required States States { get; set; } 
+        public virtual States States { get; set; } 
         public int RequestId { get; set; }
-        public virtual required Requests Requests { get; set; }
+        public virtual Requests Requests { get; set; }
     }
 }

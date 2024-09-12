@@ -9,12 +9,16 @@ namespace SIMYTSoacha.Model
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int FinesId { get; set; }
         public int InfractionId { get; set; }
-        public virtual required Infractions Infractions { get; set; }
+        [ForeignKey("InfractionId")]
+        public required virtual Infractions Infractions { get; set; }
         public int MimpositionId { get; set; }
-        public  virtual required Mimpositions Mimpositions { get; set; }
+        [ForeignKey("MimpositionId")]
+        public required virtual Mimpositions Mimpositions { get; set; }
         public int ManagerId { get; set; }
-        public virtual required Managers Managers { get; set; }
+        [ForeignKey("ManagerId")]
+        public required virtual Managers Managers { get; set; }
         public int ProcedureId { get; set; }
-        public virtual required Procedures Procedures { get; set; }
+        [ForeignKey("ProcedureId")]
+        public required virtual Procedures Procedures { get; set; }
     }
 }

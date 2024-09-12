@@ -6,7 +6,7 @@ namespace SIMYTSoacha.Model
     [Table("TypesServices")]
     public class TypesServices
     {
-        [Key]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int TservicesId { get; set; }
         [MaxLength(50)]
         public required string TservicesName { get; set; }

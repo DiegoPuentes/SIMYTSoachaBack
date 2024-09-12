@@ -12,7 +12,7 @@ namespace SIMYTSoacha.Model
         [ForeignKey("UtypeId")]
         public virtual required UsersTypes UsersType { get; set; }
         public int PermissionId { get; set; }
-        [ForeignKey("Permission")]
+        [ForeignKey("PermissionId")]
         public virtual required Permissions Permissions { get; set; }
     }
 }

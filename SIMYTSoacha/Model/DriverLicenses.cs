@@ -8,15 +8,19 @@ namespace SIMYTSoacha.Model
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int DriverLicenseId { get; set; }
-        public int Nlicense {  get; set; }
-        public int EcenterId { get; set; }
-        public virtual required Ecenters Ecenters { get; set; }
+        public required int Nlicense {  get; set; }
+        public required int EcenterId { get; set; }
+        [ForeignKey("EcenterId")]
+        public required virtual Ecenters Ecenters { get; set; }
         public DateTime DateIssue { get; set; }
         public int StateId { get; set; }
-        public virtual required States States { get; set; }
+        [ForeignKey("StateId")]
+        public required virtual States States { get; set; }
         public int RestrictionId { get; set; }
-        public virtual required Restrictions Restrictions { get; set; }
+        [ForeignKey("RestrictionId")]
+        public required virtual Restrictions Restrictions { get; set; }
         public int ProcedureId { get; set; }
-        public virtual required Procedures Procedures { get; set; }
+        [ForeignKey("ProcedureId")]
+        public required virtual Procedures Procedures { get; set; }
     }
 }
