@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SIMYTSoacha.Context;
 
@@ -11,9 +12,11 @@ using SIMYTSoacha.Context;
 namespace SIMYTSoacha.Migrations
 {
     [DbContext(typeof(SimytDbContext))]
-    partial class SimytDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240912170145_AddTablesAndRelationship")]
+    partial class AddTablesAndRelationship
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -216,23 +219,6 @@ namespace SIMYTSoacha.Migrations
                     b.ToTable("Infractions");
                 });
 
-            modelBuilder.Entity("SIMYTSoacha.Model.Line", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Nline")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Line");
-                });
-
             modelBuilder.Entity("SIMYTSoacha.Model.Managers", b =>
                 {
                     b.Property<int>("ManagersId")
@@ -272,47 +258,6 @@ namespace SIMYTSoacha.Migrations
                     b.HasKey("MimpositionId");
 
                     b.ToTable("Mimpositions");
-                });
-
-            modelBuilder.Entity("SIMYTSoacha.Model.ModelXLine", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("LineNumberId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ModelId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LineNumberId");
-
-                    b.HasIndex("ModelId");
-
-                    b.ToTable("ModelXLine");
-                });
-
-            modelBuilder.Entity("SIMYTSoacha.Model.Models", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("NModel")
-                        .IsRequired()
-                        .HasMaxLength(5)
-                        .HasColumnType("nvarchar(5)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Models");
                 });
 
             modelBuilder.Entity("SIMYTSoacha.Model.People", b =>
@@ -700,25 +645,6 @@ namespace SIMYTSoacha.Migrations
                     b.Navigation("People");
 
                     b.Navigation("UsersXPermissions");
-                });
-
-            modelBuilder.Entity("SIMYTSoacha.Model.ModelXLine", b =>
-                {
-                    b.HasOne("SIMYTSoacha.Model.Line", "Line")
-                        .WithMany()
-                        .HasForeignKey("LineNumberId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SIMYTSoacha.Model.Models", "Models")
-                        .WithMany()
-                        .HasForeignKey("ModelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Line");
-
-                    b.Navigation("Models");
                 });
 
             modelBuilder.Entity("SIMYTSoacha.Model.People", b =>

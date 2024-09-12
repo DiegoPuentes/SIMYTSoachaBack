@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using SIMYTSoacha.Model;
 
 namespace SIMYTSoacha.Context
@@ -22,12 +23,14 @@ namespace SIMYTSoacha.Context
         public DbSet<DriverLicenses> DriverLicenses { get; set; }
         public DbSet<States> States { get; set; }
         public DbSet<Ecenters> Ecenters { get; set; }
-
-        /*        
         public DbSet<Procedures> Procedures { get; set; }
-        public DbSet<TrafficLicenses> TrafficLicenses { get;set; }  
+        public DbSet<TypesVehicles> TypesVehicles { get; set; }
+        public DbSet<TrafficLicenses> TrafficLicenses { get; set; }
         public DbSet<Permissions> Permissions { get; set; }
         public DbSet<Infractions> Infractions { get; set; }
-        */
+        public DbSet<Line> Lines { get; set; }
+        //public DbSet<Vehicles> Vehicles { get; set; }
+        public DbSet<Models> Models { get; set; }
+        public DbSet<ModelXLine> ModelXLines { get; set; }
     }
 }

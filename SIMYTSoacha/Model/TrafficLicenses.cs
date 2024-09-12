@@ -11,13 +11,17 @@ namespace SIMYTSoacha.Model
         [MaxLength(6)]
         public required string Plate {  get; set; }
         public int VstatesId { get; set; }
-        //This method is for the relationship of vehicle state 
-        public virtual States States { get; set; }
+        //This property is for the relationship of vehicle state 
+        [ForeignKey("VstatesId")]
+        public required virtual States States { get; set; }
         public int TserviceId { get; set; }
-        public virtual TypesServices Services { get; set; }
+        [ForeignKey("TserviceId")]
+        public required virtual TypesServices Services { get; set; }
         public int TvehicleId { get; set; }
-        //Missing invoke the method of the class TypesVehicles
+        [ForeignKey("TvehicleId")]
+        public required virtual TypesVehicles Vehicles { get; set; }
         public int ProcedureId { get; set; }
-        public virtual Procedures Procedures { get; set; }
+        [ForeignKey("ProcedureId")]
+        public required virtual Procedures Procedures { get; set; }
     }
 }
