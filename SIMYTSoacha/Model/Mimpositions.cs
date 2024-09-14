@@ -6,9 +6,9 @@ namespace SIMYTSoacha.Model
     [Table("Mimpositions")]
     public class Mimpositions
     {
-        [Key]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int MimpositionId { get; set; }
         [MaxLength(50)]
-        public string? MimpositionName { get; set; }
+        public required string MimpositionName { get; set; }
     }
 }

@@ -6,9 +6,9 @@ namespace SIMYTSoacha.Model
     [Table("States")]
     public class States
     {
-        [Key]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int StateId { get; set; }
         [MaxLength(50)]
-        public string? StatesName { get; set; }
+        public required string StatesName { get; set; }
     }
 }

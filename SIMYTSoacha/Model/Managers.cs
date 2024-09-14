@@ -6,10 +6,13 @@ namespace SIMYTSoacha.Model
     [Table("Managers")]
     public class Managers
     {
-        [Key]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ManagersId { get; set; }
         public int PeopleId { get; set; }
-        public int UserTypeXPermission { get; set; }
-
+        [ForeignKey("PeopleId")]
+        public virtual required People People { get; set; }
+        public int UserTypeXPermissionId { get; set; }
+        [ForeignKey("UserTypeXPermissionId")]
+        public virtual required UsersXPermissions UsersXPermissions { get; set; }
     }
 }
