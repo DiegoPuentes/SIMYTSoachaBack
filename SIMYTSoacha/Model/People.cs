@@ -16,8 +16,9 @@ namespace SIMYTSoacha.Model
         public required string Ndocument { get; set; }
         public required string Sex {  get; set; }
         public DateTime DateBirth { get; set; }
-        public int UserTypeXPermissionId { get; set; }
-        [ForeignKey("UserTypeXPermissionId")]
-        public virtual required UsersXPermissions UserXPermissions { get; set; }
+        public int UserTypeId { get; set; }
+        [ForeignKey("UserTypeId")]
+        public virtual required UsersTypes UserXPermissions { get; set; }
+        public required Boolean State { get; set; }
     }
 }

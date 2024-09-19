@@ -6,8 +6,6 @@ namespace SIMYTSoacha.Model
     [Table("UsersXPermissions")]
     public class UsersXPermissions
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int UpermissionId { get; set; }
         public int UtypeId { get; set; }
         [ForeignKey("UtypeId")]
         public virtual required UsersTypes UsersType { get; set; }

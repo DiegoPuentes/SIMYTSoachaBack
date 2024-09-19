@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using SIMYTSoacha.Model;
+using System.Reflection.Metadata;
 
 namespace SIMYTSoacha.Context
 {
@@ -10,7 +11,6 @@ namespace SIMYTSoacha.Context
         public DbSet<People> Peoples { get; set; }
         public DbSet<DocumentsTypes> DocumentsTypes { get; set; }
         public DbSet<Requests> Requests { get; set; }
-        public DbSet<Managers> Managers { get; set; }
         public DbSet<UsersXPermissions> UsersXPermissions { get; set; }
         public DbSet<Contacts> Contacts { get; set; }
         public DbSet<Histories> Histories { get; set; }
@@ -32,5 +32,11 @@ namespace SIMYTSoacha.Context
         //public DbSet<Vehicles> Vehicles { get; set; }
         public DbSet<Models> Models { get; set; }
         public DbSet<ModelXLine> ModelXLines { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<UsersXPermissions>()
+                .HasNoKey();
+        }
     }
 }
