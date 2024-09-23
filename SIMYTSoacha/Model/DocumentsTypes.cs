@@ -10,5 +10,6 @@ namespace SIMYTSoacha.Model
         public int DtypesId { get; set; }
         [MaxLength(50)]
         public required string Dtype { get; set; }
+        public bool Isdeleted { get; set; } = false;
     }
 }

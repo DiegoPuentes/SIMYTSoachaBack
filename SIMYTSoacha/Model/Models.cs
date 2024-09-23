@@ -10,5 +10,6 @@ namespace SIMYTSoacha.Model
         public int Id { get; set; }
         [MaxLength(5)]
         public required string NModel { get; set; }
+        public bool Isdeleted { get; set; } = false;
     }
 }

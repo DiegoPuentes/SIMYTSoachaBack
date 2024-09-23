@@ -15,5 +15,6 @@ namespace SIMYTSoacha.Model
         public int ManagerId { get; set; }
         [ForeignKey("ManagerId")]
         public virtual required Managers Managers { get; set; }
+        public bool Isdeleted { get; set; } = false;
     }
 }

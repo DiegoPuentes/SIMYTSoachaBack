@@ -10,5 +10,6 @@ namespace SIMYTSoacha.Model
         public int EcenterId { get; set; }
         [MaxLength(100)]
         public required string Ecenter {  get; set; }
+        public bool Isdeleted { get; set; } = false;
     }
 }

@@ -22,5 +22,6 @@ namespace SIMYTSoacha.Model
         public int MlineId { get; set; }
         [ForeignKey("MlineId")]
         public required virtual ModelXLine ModelXLine { get; set; }
+        public bool Isdeleted { get; set; } = false;
     }
 }

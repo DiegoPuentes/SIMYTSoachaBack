@@ -18,5 +18,6 @@ namespace SIMYTSoacha.Model
         public DateTime DateBirth { get; set; }
         public int UtypeId { get; set; }
         public DateTime ModifyDate {  get; set; }
+        public bool Isdeleted { get; set; } = false;
     }
 }

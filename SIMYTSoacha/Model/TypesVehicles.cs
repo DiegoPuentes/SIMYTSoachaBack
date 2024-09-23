@@ -9,5 +9,6 @@ namespace SIMYTSoacha.Model
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public required string Tvehicle { get; set; }
+        public bool Isdeleted { get; set; } = false;
     }
 }

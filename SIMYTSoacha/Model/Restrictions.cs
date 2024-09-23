@@ -10,5 +10,6 @@ namespace SIMYTSoacha.Model
         public int RestrictionId { get; set; }
         [MaxLength(50)]
         public required string RestrictionName { get; set; }
+        public bool Isdeleted { get; set; } = false;
     }
 }

@@ -14,5 +14,6 @@ namespace SIMYTSoacha.Model
         public int PermissionId { get; set; }
         [ForeignKey("PermissionId")]
         public virtual required Permissions Permissions { get; set; }
+        public bool Isdeleted { get; set; } = false;
     }
 }

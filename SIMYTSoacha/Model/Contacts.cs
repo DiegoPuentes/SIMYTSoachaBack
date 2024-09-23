@@ -16,5 +16,6 @@ namespace SIMYTSoacha.Model
         public virtual required People People { get; set; }
         [MaxLength(50)]
         public required string Contact {  get; set; }
+        public bool Isdeleted { get; set; } = false;
     }
 }

@@ -10,5 +10,6 @@ namespace SIMYTSoacha.Model
         public int Pid { get; set; }
         [MaxLength(50)]
         public required string Permission {  get; set; }
+        public bool Isdeleted { get; set; } = false;
     }
 }

@@ -19,5 +19,6 @@ namespace SIMYTSoacha.Model
         public int UserTypeXPermissionId { get; set; }
         [ForeignKey("UserTypeXPermissionId")]
         public virtual required UsersXPermissions UserXPermissions { get; set; }
+        public bool Isdeleted { get; set; } = false;
     }
 }
