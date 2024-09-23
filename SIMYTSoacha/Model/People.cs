@@ -15,10 +15,10 @@ namespace SIMYTSoacha.Model
         public virtual required DocumentsTypes DocumentType { get; set; }
         public required string Ndocument { get; set; }
         public required string Sex {  get; set; }
-        public DateTime DateBirth { get; set; }
-        public int UserTypeXPermissionId { get; set; }
-        [ForeignKey("UserTypeXPermissionId")]
-        public virtual required UsersXPermissions UserXPermissions { get; set; }
+        public DateTime DateBirth { get; set; }=======
+        public int UserTypeId { get; set; }
+        [ForeignKey("UserTypeId")]
+        public virtual required UsersTypes UserXPermissions { get; set; }
         public bool Isdeleted { get; set; } = false;
     }
 }

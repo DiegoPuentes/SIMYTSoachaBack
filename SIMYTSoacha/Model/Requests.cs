@@ -12,9 +12,9 @@ namespace SIMYTSoacha.Model
         [ForeignKey("PeopleId")]
         public virtual required People People { get; set; }
         public required DateTime Request {  get; set; }
-        public int ManagerId { get; set; }
-        [ForeignKey("ManagerId")]
-        public virtual required Managers Managers { get; set; }
-        public bool Isdeleted { get; set; } = false;
+        public int OfficerId { get; set; }
+        [ForeignKey("OfficerId")]
+        public virtual required People Officer{ get; set; }
+      public bool Isdeleted { get; set; } = false;
     }
 }
