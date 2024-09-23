@@ -10,5 +10,6 @@ namespace SIMYTSoacha.Model
         public int MimpositionId { get; set; }
         [MaxLength(50)]
         public required string MimpositionName { get; set; }
+        public bool Isdeleted { get; set; } = false;
     }
 }

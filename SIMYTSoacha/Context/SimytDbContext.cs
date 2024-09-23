@@ -8,7 +8,7 @@ namespace SIMYTSoacha.Context
     public class SimytDbContext : DbContext
     {
         public SimytDbContext(DbContextOptions options) : base(options) { }
-        public DbSet<People> Peoples { get; set; }
+        public DbSet<People> People { get; set; }
         public DbSet<DocumentsTypes> DocumentsTypes { get; set; }
         public DbSet<Requests> Requests { get; set; }
         public DbSet<UsersXPermissions> UsersXPermissions { get; set; }

@@ -9,5 +9,6 @@ namespace SIMYTSoacha.Model
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int TcontactId { get; set; }
         public required string Dtype { get; set; }
+        public bool Isdeleted { get; set; } = false;
     }
 }

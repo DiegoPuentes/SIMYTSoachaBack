@@ -10,5 +10,6 @@ namespace SIMYTSoacha.Model
         public int UtypesId { get; set; }
         [MaxLength(50)]
         public required string UtypesName { get; set; }
+        public bool Isdeleted { get; set; } = false;
     }
 }

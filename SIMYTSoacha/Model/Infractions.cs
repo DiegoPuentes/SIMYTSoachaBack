@@ -10,5 +10,6 @@ namespace SIMYTSoacha.Model
         public int InfractionId { get; set; }
         [MaxLength(50)]
         public required string InfractionName { get; set; }
+        public bool Isdeleted { get; set; } = false;
     }
 }

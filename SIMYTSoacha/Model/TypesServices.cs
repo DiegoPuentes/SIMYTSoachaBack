@@ -10,5 +10,6 @@ namespace SIMYTSoacha.Model
         public int TservicesId { get; set; }
         [MaxLength(50)]
         public required string TservicesName { get; set; }
+        public bool Isdeleted { get; set; } = false;
     }
 }

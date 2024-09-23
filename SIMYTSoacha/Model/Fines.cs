@@ -17,5 +17,6 @@ namespace SIMYTSoacha.Model
         public int ProcedureId { get; set; }
         [ForeignKey("ProcedureId")]
         public required virtual Procedures Procedures { get; set; }
+        public bool Isdeleted { get; set; } = false;
     }
 }
