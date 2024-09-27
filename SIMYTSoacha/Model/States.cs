@@ -10,5 +10,6 @@ namespace SIMYTSoacha.Model
         public int StateId { get; set; }
         [MaxLength(50)]
         public required string StatesName { get; set; }
+        public bool Isdeleted { get; set; } = false;
     }
 }

@@ -12,5 +12,6 @@ namespace SIMYTSoacha.Model
         public int ModelId { get; set; }
         [ForeignKey("ModelId")]
         public required virtual Models Models { get; set; }
+        public bool Isdeleted { get; set; } = false;
     }
 }

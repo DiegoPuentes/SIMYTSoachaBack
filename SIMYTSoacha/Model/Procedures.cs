@@ -15,5 +15,6 @@ namespace SIMYTSoacha.Model
         public int RequestId { get; set; }
         [ForeignKey("RequestId")]
         public required virtual Requests Requests { get; set; }
+        public bool Isdeleted { get; set; } = false;
     }
 }
