@@ -19,8 +19,9 @@ namespace SIMYTSoacha.Model
         [ForeignKey("PeopleId ")]
         public required virtual People People { get; set; }
         public required string Echasis { get; set; }
-        public int MlineId { get; set; }
-        [ForeignKey("MlineId")]
-        public required virtual ModelXLine ModelXLine { get; set; }
+        public int ModelId { get; set; }
+        [ForeignKey("ModelId")]
+        public required virtual Models Models { get; set; }
+        public bool Isdeleted { get; set; } = false;
     }
 }
