@@ -14,9 +14,6 @@ namespace SIMYTSoacha.Model
         public int MimpositionId { get; set; }
         [ForeignKey("MimpositionId")]
         public required virtual Mimpositions Mimpositions { get; set; }
-        public int ManagerId { get; set; }
-        [ForeignKey("ManagerId")]
-        public required virtual Managers Managers { get; set; }
         public int ProcedureId { get; set; }
         [ForeignKey("ProcedureId")]
         public required virtual Procedures Procedures { get; set; }

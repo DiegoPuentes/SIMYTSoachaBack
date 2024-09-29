@@ -136,9 +136,6 @@ namespace SIMYTSoacha.Migrations
                     b.Property<int>("InfractionId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ManagerId")
-                        .HasColumnType("int");
-
                     b.Property<int>("MimpositionId")
                         .HasColumnType("int");
 
@@ -148,8 +145,6 @@ namespace SIMYTSoacha.Migrations
                     b.HasKey("FinesId");
 
                     b.HasIndex("InfractionId");
-
-                    b.HasIndex("ManagerId");
 
                     b.HasIndex("MimpositionId");
 
@@ -231,29 +226,6 @@ namespace SIMYTSoacha.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Line");
-                });
-
-            modelBuilder.Entity("SIMYTSoacha.Model.Managers", b =>
-                {
-                    b.Property<int>("ManagersId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ManagersId"));
-
-                    b.Property<int>("PeopleId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserTypeXPermissionId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ManagersId");
-
-                    b.HasIndex("PeopleId");
-
-                    b.HasIndex("UserTypeXPermissionId");
-
-                    b.ToTable("Managers");
                 });
 
             modelBuilder.Entity("SIMYTSoacha.Model.Mimpositions", b =>
@@ -345,14 +317,17 @@ namespace SIMYTSoacha.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserTypeXPermissionId")
+                    b.Property<bool>("State")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("UserTypeId")
                         .HasColumnType("int");
 
                     b.HasKey("PeopleId");
 
                     b.HasIndex("DtypeId");
 
-                    b.HasIndex("UserTypeXPermissionId");
+                    b.HasIndex("UserTypeId");
 
                     b.ToTable("People");
                 });
@@ -409,7 +384,7 @@ namespace SIMYTSoacha.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RequestId"));
 
-                    b.Property<int>("ManagerId")
+                    b.Property<int>("OfficerId")
                         .HasColumnType("int");
 
                     b.Property<int>("PeopleId")
@@ -420,7 +395,7 @@ namespace SIMYTSoacha.Migrations
 
                     b.HasKey("RequestId");
 
-                    b.HasIndex("ManagerId");
+                    b.HasIndex("OfficerId");
 
                     b.HasIndex("PeopleId");
 
@@ -573,19 +548,11 @@ namespace SIMYTSoacha.Migrations
 
             modelBuilder.Entity("SIMYTSoacha.Model.UsersXPermissions", b =>
                 {
-                    b.Property<int>("UpermissionId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UpermissionId"));
-
                     b.Property<int>("PermissionId")
                         .HasColumnType("int");
 
                     b.Property<int>("UtypeId")
                         .HasColumnType("int");
-
-                    b.HasKey("UpermissionId");
 
                     b.HasIndex("PermissionId");
 
@@ -656,12 +623,6 @@ namespace SIMYTSoacha.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SIMYTSoacha.Model.Managers", "Managers")
-                        .WithMany()
-                        .HasForeignKey("ManagerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("SIMYTSoacha.Model.Mimpositions", "Mimpositions")
                         .WithMany()
                         .HasForeignKey("MimpositionId")
@@ -676,30 +637,9 @@ namespace SIMYTSoacha.Migrations
 
                     b.Navigation("Infractions");
 
-                    b.Navigation("Managers");
-
                     b.Navigation("Mimpositions");
 
                     b.Navigation("Procedures");
-                });
-
-            modelBuilder.Entity("SIMYTSoacha.Model.Managers", b =>
-                {
-                    b.HasOne("SIMYTSoacha.Model.People", "People")
-                        .WithMany()
-                        .HasForeignKey("PeopleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SIMYTSoacha.Model.UsersXPermissions", "UsersXPermissions")
-                        .WithMany()
-                        .HasForeignKey("UserTypeXPermissionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("People");
-
-                    b.Navigation("UsersXPermissions");
                 });
 
             modelBuilder.Entity("SIMYTSoacha.Model.ModelXLine", b =>
@@ -729,9 +669,9 @@ namespace SIMYTSoacha.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SIMYTSoacha.Model.UsersXPermissions", "UserXPermissions")
+                    b.HasOne("SIMYTSoacha.Model.UsersTypes", "UserXPermissions")
                         .WithMany()
-                        .HasForeignKey("UserTypeXPermissionId")
+                        .HasForeignKey("UserTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -761,9 +701,9 @@ namespace SIMYTSoacha.Migrations
 
             modelBuilder.Entity("SIMYTSoacha.Model.Requests", b =>
                 {
-                    b.HasOne("SIMYTSoacha.Model.Managers", "Managers")
+                    b.HasOne("SIMYTSoacha.Model.People", "Officer")
                         .WithMany()
-                        .HasForeignKey("ManagerId")
+                        .HasForeignKey("OfficerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -773,7 +713,7 @@ namespace SIMYTSoacha.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Managers");
+                    b.Navigation("Officer");
 
                     b.Navigation("People");
                 });
