@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SIMYTSoacha.Context;
 using SIMYTSoacha.Model;
+using System.Globalization;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SIMYTSoacha.Repositories
 {
@@ -8,8 +10,8 @@ namespace SIMYTSoacha.Repositories
     {
         Task<IEnumerable<People>> GetAllPeopleAsync();
         Task<People> GetSubjectByIdAsync(int id);
-        Task CreatePeopleAsync(People person);
-        Task UpdatePeopleAsync(People person);
+        Task<People> CreatePeopleAsync(string name, string lnames, int dtypeid, string ndocument, string sex,DateTime date, int utypeid, bool isdeleted);
+        Task UpdatePeopleAsync(string name, string lnames, int dtypeid, string ndocument, string sex, DateTime date, int utypeid, bool isdeleted);
         Task SoftDeletePeopleAsync(int id);
     }
     public class PeopleRepository : IPeopleRepository
@@ -19,10 +21,22 @@ namespace SIMYTSoacha.Repositories
         {
             _context = context;
         }
-        public async Task CreatePeopleAsync(People person)
+        public async Task<People> CreatePeopleAsync(string name, string lnames, int dtypeid, string ndocument, string sex, DateTime date, int utypeid, bool isdeleted)
         {
-            _context.People.Add(person);
-            _context.SaveChanges();
+            People people = new People
+            {
+                Names = name,
+                Lnames = lnames,
+                DtypeId = dtypeid,
+                Ndocument = ndocument,
+                Sex = sex,  
+                DateBirth = date,
+                UserTypeId = utypeid,
+                Isdeleted = isdeleted
+            };
+            _context.People.Add(people);
+            await _context.SaveChangesAsync();
+            return people;
         }
 
         public async Task<IEnumerable<People>> GetAllPeopleAsync()
@@ -48,9 +62,20 @@ namespace SIMYTSoacha.Repositories
             }
         }
 
-        public async Task UpdatePeopleAsync(People person)
+        public async Task UpdatePeopleAsync(string name, string lnames, int dtypeid, string ndocument, string sex, DateTime date, int utypeid, bool isdeleted)
         {
-            _context.People.Update(person);
+            People updatePeople = new People
+            {
+                Names = name,
+                Lnames = lnames,
+                DtypeId = dtypeid,
+                Ndocument = ndocument,
+                Sex = sex,
+                DateBirth = date,
+                UserTypeId = utypeid,
+                Isdeleted = isdeleted
+            };
+            _context.People.Update(updatePeople);
             _context.SaveChangesAsync();
         }
     }
