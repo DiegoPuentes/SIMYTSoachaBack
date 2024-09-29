@@ -14,7 +14,7 @@ namespace SIMYTSoacha.Model
         public required DateTime Request {  get; set; }
         public int OfficerId { get; set; }
         [ForeignKey("OfficerId")]
-        public virtual required People Officer{ get; set; }
-      public bool Isdeleted { get; set; } = false;
+        public virtual required People Officer { get; set; }
+        public bool Isdeleted { get; set; } = false;
     }
 }

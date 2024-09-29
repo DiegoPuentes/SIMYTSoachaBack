@@ -12,7 +12,7 @@ using SIMYTSoacha.Context;
 namespace SIMYTSoacha.Migrations
 {
     [DbContext(typeof(SimytDbContext))]
-    [Migration("20240919164646_Initial")]
+    [Migration("20240927174201_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -37,6 +37,9 @@ namespace SIMYTSoacha.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<bool>("Isdeleted")
+                        .HasColumnType("bit");
 
                     b.Property<int>("PeopleId")
                         .HasColumnType("int");
@@ -66,6 +69,9 @@ namespace SIMYTSoacha.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<bool>("Isdeleted")
+                        .HasColumnType("bit");
+
                     b.HasKey("DtypesId");
 
                     b.ToTable("DocumentsTypes");
@@ -84,6 +90,9 @@ namespace SIMYTSoacha.Migrations
 
                     b.Property<int>("EcenterId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("Isdeleted")
+                        .HasColumnType("bit");
 
                     b.Property<int>("Nlicense")
                         .HasColumnType("int");
@@ -123,6 +132,9 @@ namespace SIMYTSoacha.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<bool>("Isdeleted")
+                        .HasColumnType("bit");
+
                     b.HasKey("EcenterId");
 
                     b.ToTable("ExpeditionsCenters");
@@ -138,6 +150,9 @@ namespace SIMYTSoacha.Migrations
 
                     b.Property<int>("InfractionId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("Isdeleted")
+                        .HasColumnType("bit");
 
                     b.Property<int>("MimpositionId")
                         .HasColumnType("int");
@@ -169,6 +184,9 @@ namespace SIMYTSoacha.Migrations
 
                     b.Property<int>("DtypeId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("Isdeleted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Lname")
                         .IsRequired()
@@ -209,12 +227,15 @@ namespace SIMYTSoacha.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<bool>("Isdeleted")
+                        .HasColumnType("bit");
+
                     b.HasKey("InfractionId");
 
                     b.ToTable("Infractions");
                 });
 
-            modelBuilder.Entity("SIMYTSoacha.Model.Line", b =>
+            modelBuilder.Entity("SIMYTSoacha.Model.Lines", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -222,13 +243,16 @@ namespace SIMYTSoacha.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<bool>("Isdeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Nline")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Line");
+                    b.ToTable("Lines");
                 });
 
             modelBuilder.Entity("SIMYTSoacha.Model.Mimpositions", b =>
@@ -238,6 +262,9 @@ namespace SIMYTSoacha.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MimpositionId"));
+
+                    b.Property<bool>("Isdeleted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("MimpositionName")
                         .IsRequired()
@@ -251,19 +278,14 @@ namespace SIMYTSoacha.Migrations
 
             modelBuilder.Entity("SIMYTSoacha.Model.ModelXLine", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<bool>("Isdeleted")
+                        .HasColumnType("bit");
 
                     b.Property<int>("LineNumberId")
                         .HasColumnType("int");
 
                     b.Property<int>("ModelId")
                         .HasColumnType("int");
-
-                    b.HasKey("Id");
 
                     b.HasIndex("LineNumberId");
 
@@ -279,6 +301,9 @@ namespace SIMYTSoacha.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Isdeleted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("NModel")
                         .IsRequired()
@@ -304,6 +329,9 @@ namespace SIMYTSoacha.Migrations
                     b.Property<int>("DtypeId")
                         .HasColumnType("int");
 
+                    b.Property<bool>("Isdeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Lnames")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -319,9 +347,6 @@ namespace SIMYTSoacha.Migrations
                     b.Property<string>("Sex")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("State")
-                        .HasColumnType("bit");
 
                     b.Property<int>("UserTypeId")
                         .HasColumnType("int");
@@ -343,6 +368,9 @@ namespace SIMYTSoacha.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Pid"));
 
+                    b.Property<bool>("Isdeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Permission")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -360,6 +388,9 @@ namespace SIMYTSoacha.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProcedureId"));
+
+                    b.Property<bool>("Isdeleted")
+                        .HasColumnType("bit");
 
                     b.Property<int>("Procedure")
                         .HasColumnType("int");
@@ -387,6 +418,9 @@ namespace SIMYTSoacha.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RequestId"));
 
+                    b.Property<bool>("Isdeleted")
+                        .HasColumnType("bit");
+
                     b.Property<int>("OfficerId")
                         .HasColumnType("int");
 
@@ -413,6 +447,9 @@ namespace SIMYTSoacha.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RestrictionId"));
 
+                    b.Property<bool>("Isdeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("RestrictionName")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -431,6 +468,9 @@ namespace SIMYTSoacha.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StateId"));
 
+                    b.Property<bool>("Isdeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("StatesName")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -448,6 +488,9 @@ namespace SIMYTSoacha.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TlicensesId"));
+
+                    b.Property<bool>("Isdeleted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Plate")
                         .IsRequired()
@@ -491,6 +534,9 @@ namespace SIMYTSoacha.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("Isdeleted")
+                        .HasColumnType("bit");
+
                     b.HasKey("TcontactId");
 
                     b.ToTable("TypesContacts");
@@ -503,6 +549,9 @@ namespace SIMYTSoacha.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TservicesId"));
+
+                    b.Property<bool>("Isdeleted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("TservicesName")
                         .IsRequired()
@@ -522,6 +571,9 @@ namespace SIMYTSoacha.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<bool>("Isdeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Tvehicle")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -539,6 +591,9 @@ namespace SIMYTSoacha.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UtypesId"));
 
+                    b.Property<bool>("Isdeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("UtypesName")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -551,6 +606,9 @@ namespace SIMYTSoacha.Migrations
 
             modelBuilder.Entity("SIMYTSoacha.Model.UsersXPermissions", b =>
                 {
+                    b.Property<bool>("Isdeleted")
+                        .HasColumnType("bit");
+
                     b.Property<int>("PermissionId")
                         .HasColumnType("int");
 
@@ -562,6 +620,46 @@ namespace SIMYTSoacha.Migrations
                     b.HasIndex("UtypeId");
 
                     b.ToTable("UsersXPermissions");
+                });
+
+            modelBuilder.Entity("SIMYTSoacha.Model.Vehicles", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BrandId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ColorId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Echasis")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Isdeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("ModelId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Nmotor")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PeopleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ModelId");
+
+                    b.HasIndex("PeopleId");
+
+                    b.ToTable("Vehicles");
                 });
 
             modelBuilder.Entity("SIMYTSoacha.Model.Contacts", b =>
@@ -647,7 +745,7 @@ namespace SIMYTSoacha.Migrations
 
             modelBuilder.Entity("SIMYTSoacha.Model.ModelXLine", b =>
                 {
-                    b.HasOne("SIMYTSoacha.Model.Line", "Line")
+                    b.HasOne("SIMYTSoacha.Model.Lines", "Line")
                         .WithMany()
                         .HasForeignKey("LineNumberId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -672,7 +770,7 @@ namespace SIMYTSoacha.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SIMYTSoacha.Model.UsersTypes", "UserXPermissions")
+                    b.HasOne("SIMYTSoacha.Model.UsersTypes", "UsersTypes")
                         .WithMany()
                         .HasForeignKey("UserTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -680,7 +778,7 @@ namespace SIMYTSoacha.Migrations
 
                     b.Navigation("DocumentType");
 
-                    b.Navigation("UserXPermissions");
+                    b.Navigation("UsersTypes");
                 });
 
             modelBuilder.Entity("SIMYTSoacha.Model.Procedures", b =>
@@ -773,6 +871,25 @@ namespace SIMYTSoacha.Migrations
                     b.Navigation("Permissions");
 
                     b.Navigation("UsersType");
+                });
+
+            modelBuilder.Entity("SIMYTSoacha.Model.Vehicles", b =>
+                {
+                    b.HasOne("SIMYTSoacha.Model.Models", "Models")
+                        .WithMany()
+                        .HasForeignKey("ModelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SIMYTSoacha.Model.People", "People")
+                        .WithMany()
+                        .HasForeignKey("PeopleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Models");
+
+                    b.Navigation("People");
                 });
 #pragma warning restore 612, 618
         }

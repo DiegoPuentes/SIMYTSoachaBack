@@ -10,12 +10,10 @@ var conString = builder.Configuration.GetConnectionString("Connection");
 builder.Services.AddDbContext<SimytDbContext>(options => options.UseSqlServer(conString));
 
 builder.Services.AddScoped<IPeopleRepository, PeopleRepository>();
-builder.Services.AddScoped<IDocRepository, DocTypeRepository>();
-builder.Services.AddScoped<IContactRepository, ContactRepository>();
+builder.Services.AddScoped<IDocTypeRepository, DocTypeRepository>();
 
 builder.Services.AddScoped<IPeopleService, PeopleService>();
-builder.Services.AddScoped<IDocService, DocService>();
-builder.Services.AddScoped<IContactService, ContactService>();
+builder.Services.AddScoped<IContactService, DocService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
