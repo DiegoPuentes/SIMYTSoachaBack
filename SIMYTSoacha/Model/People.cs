@@ -12,13 +12,13 @@ namespace SIMYTSoacha.Model
         public required string Lnames { get; set; }
         public int DtypeId {  get; set; }
         [ForeignKey("DtypeId")]
-        public virtual required DocumentsTypes DocumentType { get; set; }
+        public virtual DocumentsTypes DocumentType { get; set; }
         public required string Ndocument { get; set; }
         public required string Sex {  get; set; }
-        public DateTime DateBirth { get; set; }=======
+        public DateTime DateBirth { get; set; }
         public int UserTypeId { get; set; }
         [ForeignKey("UserTypeId")]
-        public virtual required UsersTypes UserXPermissions { get; set; }
+        public virtual UsersTypes UserType { get; set; }
         public bool Isdeleted { get; set; } = false;
     }
 }

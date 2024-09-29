@@ -1,7 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using SIMYTSoacha.Model;
-using System.Reflection.Metadata;
 
 namespace SIMYTSoacha.Context
 {
@@ -9,7 +7,7 @@ namespace SIMYTSoacha.Context
     {
         public SimytDbContext(DbContextOptions options) : base(options) { }
         public DbSet<People> People { get; set; }
-        public DbSet<DocumentsTypes> DocumentsTypes { get; set; }
+        public DbSet<DocumentsTypes> Dtypes { get; set; }
         public DbSet<Requests> Requests { get; set; }
         public DbSet<UsersXPermissions> UsersXPermissions { get; set; }
         public DbSet<Contacts> Contacts { get; set; }
@@ -28,7 +26,7 @@ namespace SIMYTSoacha.Context
         public DbSet<TrafficLicenses> TrafficLicenses { get; set; }
         public DbSet<Permissions> Permissions { get; set; }
         public DbSet<Infractions> Infractions { get; set; }
-        public DbSet<Line> Lines { get; set; }
+        public DbSet<Lines> Lines { get; set; }
         //public DbSet<Vehicles> Vehicles { get; set; }
         public DbSet<Models> Models { get; set; }
         public DbSet<ModelXLine> ModelXLines { get; set; }
@@ -37,6 +35,9 @@ namespace SIMYTSoacha.Context
         {
             modelBuilder.Entity<UsersXPermissions>()
                 .HasNoKey();
+
+            modelBuilder.Entity<ModelXLine>().
+                HasNoKey();
         }
     }
 }

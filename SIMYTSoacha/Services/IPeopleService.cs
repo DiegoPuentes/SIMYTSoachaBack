@@ -7,8 +7,8 @@ namespace SIMYTSoacha.Services
     {
         Task<IEnumerable<People>> GetAllPeoplesAsync();
         Task<People> GetPeopleByIdAsync(int id);
-        Task CreatePeopleAsync(People people);
-        Task UpdatePeopleAsync(People people);
+        Task<People> CreatePeopleAsync(string name, string lnames, int dtypeid, string ndocument, string sex, DateTime date, int utypeid, bool isdeleted);
+        Task UpdatePeopleAsync(string name, string lnames, int dtypeid, string ndocument, string sex, DateTime date, int utypeid, bool isdeleted);
         Task SoftDeletePeopleAsync(int id);
     }
 
@@ -31,14 +31,14 @@ namespace SIMYTSoacha.Services
             return await _peopleRepository.GetSubjectByIdAsync(id);
         }
 
-        public async Task CreatePeopleAsync(People people)
+        public async Task<People> CreatePeopleAsync(string name, string lnames, int dtypeid, string ndocument, string sex, DateTime date, int utypeid, bool isdeleted)
         {
-            await _peopleRepository.CreatePeopleAsync(people);
+            return await _peopleRepository.CreatePeopleAsync(name, lnames, dtypeid, ndocument, sex, date, utypeid, isdeleted);
         }
 
-        public async Task UpdatePeopleAsync(People people)
+        public async Task UpdatePeopleAsync(string name, string lnames, int dtypeid, string ndocument, string sex, DateTime date, int utypeid, bool isdeleted)
         {
-            await _peopleRepository.UpdatePeopleAsync(people);
+            await _peopleRepository.UpdatePeopleAsync(name, lnames, dtypeid, ndocument, sex, date, utypeid, isdeleted);
         }
 
         public async Task SoftDeletePeopleAsync(int id)
