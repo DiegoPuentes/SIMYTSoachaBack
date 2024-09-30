@@ -5,6 +5,8 @@ namespace SIMYTSoacha.Context
 {
     public class SimytDbContext : DbContext
     {
+        internal IEnumerable<object> People;
+
         public SimytDbContext(DbContextOptions options) : base(options)
         {
             
