@@ -15,7 +15,7 @@ namespace SIMYTSoacha.Model
         public required string Sex {  get; set; }
         public DateTime DateBirth { get; set; }
         public int UserTypeXPermission { get; set; }
-        public bool IsDeleted { get; set; } = false;
+        public bool IsDeleted { get; set; } = false; 
         
     }
 }
