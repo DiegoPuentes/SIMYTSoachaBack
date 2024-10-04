@@ -25,5 +25,6 @@ namespace SIMYTSoacha.Context
         public DbSet<TrafficLicenses> trafficLicenses { get;set; }
         public DbSet<UsersTypes> usersTypes { get; set; }
         public DbSet<Histories> histories { get; set; }
+        public DbSet<Matches> matches { get; set; }
     }
 }
