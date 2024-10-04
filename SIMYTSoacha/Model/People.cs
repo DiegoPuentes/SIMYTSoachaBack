@@ -20,5 +20,6 @@ namespace SIMYTSoacha.Model
         [ForeignKey("UserTypeId")]
         public virtual UsersTypes UserType { get; set; }
         public bool Isdeleted { get; set; } = false;
+
     }
 }

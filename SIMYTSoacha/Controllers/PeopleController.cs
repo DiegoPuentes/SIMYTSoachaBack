@@ -1,6 +1,8 @@
+
 ﻿using Microsoft.AspNetCore.Mvc;
 using SIMYTSoacha.Model;
 using SIMYTSoacha.Services;
+
 
 namespace SIMYTSoacha.Controllers
 {
@@ -8,6 +10,7 @@ namespace SIMYTSoacha.Controllers
     [ApiController]
     public class PeopleController : ControllerBase
     {
+}
         private readonly IPeopleService _peopleService;
 
         public PeopleController(IPeopleService peopleService)
@@ -79,5 +82,6 @@ namespace SIMYTSoacha.Controllers
             await _peopleService.SoftDeletePeopleAsync(id);
             return NoContent();
         }
+
     }
 }

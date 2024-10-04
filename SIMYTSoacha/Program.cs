@@ -1,3 +1,4 @@
+
 using Microsoft.EntityFrameworkCore;
 using SIMYTSoacha.Context;
 using SIMYTSoacha.Repositories;
@@ -14,6 +15,7 @@ builder.Services.AddScoped<IDocTypeRepository, DocTypeRepository>();
 
 builder.Services.AddScoped<IPeopleService, PeopleService>();
 builder.Services.AddScoped<IContactService, DocService>();
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
