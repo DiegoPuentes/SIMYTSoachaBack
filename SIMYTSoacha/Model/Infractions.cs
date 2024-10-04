@@ -6,9 +6,10 @@ namespace SIMYTSoacha.Model
     [Table("Infractions")]
     public class Infractions
     {
-        [Key]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int InfractionId { get; set; }
         [MaxLength(50)]
-        public string? InfractionName { get; set; }
+        public required string InfractionName { get; set; }
+        public bool Isdeleted { get; set; } = false;
     }
 }

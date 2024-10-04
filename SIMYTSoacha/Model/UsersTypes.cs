@@ -6,9 +6,10 @@ namespace SIMYTSoacha.Model
     [Table("UsersTypes")]
     public class UsersTypes
     {
-        [Key]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int UtypesId { get; set; }
         [MaxLength(50)]
-        public string? UtypesName { get; set; }
+        public required string UtypesName { get; set; }
+        public bool Isdeleted { get; set; } = false;
     }
 }
