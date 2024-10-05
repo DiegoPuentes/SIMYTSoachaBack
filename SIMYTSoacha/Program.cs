@@ -1,3 +1,4 @@
+
 using Microsoft.EntityFrameworkCore;
 using SIMYTSoacha.Context;
 using SIMYTSoacha.Repositories;
@@ -64,6 +65,7 @@ builder.Services.AddScoped<IHistoriesService, HistoriesService>();
 builder.Services.AddScoped<ILevelsService, LevelService>();
 builder.Services.AddScoped<ILxMService, LxMService>();
 //builder.Services.AddScoped<IContactService, ContactService>();
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

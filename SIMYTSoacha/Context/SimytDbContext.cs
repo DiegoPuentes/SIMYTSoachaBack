@@ -5,6 +5,7 @@ namespace SIMYTSoacha.Context
 {
     public class SimytDbContext : DbContext
     {
+
         public SimytDbContext(DbContextOptions options) : base(options) { }
         public DbSet<People> People { get; set; }
         public DbSet<DocumentsTypes> Dtypes { get; set; }
@@ -37,6 +38,7 @@ namespace SIMYTSoacha.Context
         public DbSet<LevelsxMatches> LevelsxMatches { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
+
         {
             modelBuilder.Entity<UsersXPermissions>()
                 .HasNoKey();
