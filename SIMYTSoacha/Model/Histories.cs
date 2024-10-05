@@ -14,9 +14,11 @@ namespace SIMYTSoacha.Model
         public required string Lname { get; set; }
         public int DtypeId { get; set; }
         [MaxLength(2)]
-        public required string Sex { get; set; }
+        public required int SexId { get; set; }
         public DateTime DateBirth { get; set; }
         public int UtypeId { get; set; }
+        public required string UserName {  get; set; }
+        public required string Password { get; set; }
         public DateTime ModifyDate {  get; set; }
         public bool Isdeleted { get; set; } = false;
     }

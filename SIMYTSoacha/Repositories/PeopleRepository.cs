@@ -10,8 +10,10 @@ namespace SIMYTSoacha.Repositories
     {
         Task<IEnumerable<People>> GetAllPeopleAsync();
         Task<People> GetSubjectByIdAsync(int id);
-        Task<People> CreatePeopleAsync(string name, string lnames, int dtypeid, string ndocument, string sex,DateTime date, int utypeid, bool isdeleted);
-        Task UpdatePeopleAsync(string name, string lnames, int dtypeid, string ndocument, string sex, DateTime date, int utypeid, bool isdeleted);
+        Task<People> CreatePeopleAsync(string name, string lnames, int dtypeid, string ndocument,
+            int sex, DateTime date, int utypeid, string user, string password, bool isdeleted);
+        Task UpdatePeopleAsync(string name, string lnames, int dtypeid, string ndocument,
+            int sex, DateTime date, int utypeid, string user, string password, bool isdeleted);
         Task SoftDeletePeopleAsync(int id);
     }
     public class PeopleRepository : IPeopleRepository
@@ -21,17 +23,23 @@ namespace SIMYTSoacha.Repositories
         {
             _context = context;
         }
-        public async Task<People> CreatePeopleAsync(string name, string lnames, int dtypeid, string ndocument, string sex, DateTime date, int utypeid, bool isdeleted)
+        public async Task<People> CreatePeopleAsync(string name, string lnames, int dtypeid, string ndocument, 
+            int sex, DateTime date, int utypeid, string user, string password, bool isdeleted)
         {
             People people = new People
             {
                 Names = name,
                 Lnames = lnames,
                 DtypeId = dtypeid,
+                DocumentType = null,
                 Ndocument = ndocument,
-                Sex = sex,  
+                SexId = sex,
+                Sex = null,
                 DateBirth = date,
                 UserTypeId = utypeid,
+                UserType = null,
+                UserName = user,
+                Password = password,
                 Isdeleted = isdeleted
             };
             _context.People.Add(people);
@@ -62,21 +70,27 @@ namespace SIMYTSoacha.Repositories
             }
         }
 
-        public async Task UpdatePeopleAsync(string name, string lnames, int dtypeid, string ndocument, string sex, DateTime date, int utypeid, bool isdeleted)
+        public async Task UpdatePeopleAsync(string name, string lnames, int dtypeid, string ndocument, 
+            int sex, DateTime date, int utypeid, string user, string password, bool isdeleted)
         {
             People updatePeople = new People
             {
                 Names = name,
                 Lnames = lnames,
                 DtypeId = dtypeid,
+                DocumentType = null,
                 Ndocument = ndocument,
-                Sex = sex,
+                SexId = sex,
+                Sex = null,
                 DateBirth = date,
                 UserTypeId = utypeid,
+                UserType = null,
+                UserName = user,
+                Password = password,
                 Isdeleted = isdeleted
             };
             _context.People.Update(updatePeople);
-            _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
     }
 }

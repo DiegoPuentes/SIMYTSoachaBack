@@ -12,8 +12,12 @@ using SIMYTSoacha.Context;
 namespace SIMYTSoacha.Migrations
 {
     [DbContext(typeof(SimytDbContext))]
-    [Migration("20240928173103_modifiePropertiesOfPeople")]
-    partial class modifiePropertiesOfPeople
+<<<<<<<< HEAD:SIMYTSoacha/Migrations/20240930145236_initial.Designer.cs
+    [Migration("20240930145236_initial")]
+========
+    [Migration("20240927174201_Initial")]
+>>>>>>>> 8b4f78ed20001f006bd8e47e9085b5e63cb5c3fd:SIMYTSoacha/Migrations/20240927174201_Initial.Designer.cs
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +28,47 @@ namespace SIMYTSoacha.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("SIMYTSoacha.Model.Brands", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Brands");
+                });
+
+            modelBuilder.Entity("SIMYTSoacha.Model.Colors", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Colors");
+                });
 
             modelBuilder.Entity("SIMYTSoacha.Model.Contacts", b =>
                 {
@@ -79,11 +124,11 @@ namespace SIMYTSoacha.Migrations
 
             modelBuilder.Entity("SIMYTSoacha.Model.DriverLicenses", b =>
                 {
-                    b.Property<int>("DriverLicenseId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DriverLicenseId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("DateIssue")
                         .HasColumnType("datetime2");
@@ -106,7 +151,7 @@ namespace SIMYTSoacha.Migrations
                     b.Property<int>("StateId")
                         .HasColumnType("int");
 
-                    b.HasKey("DriverLicenseId");
+                    b.HasKey("Id");
 
                     b.HasIndex("EcenterId");
 
@@ -344,16 +389,28 @@ namespace SIMYTSoacha.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Sex")
+                    b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+<<<<<<<< HEAD:SIMYTSoacha/Migrations/20240930145236_initial.Designer.cs
+                    b.Property<int>("SexId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+========
+>>>>>>>> 8b4f78ed20001f006bd8e47e9085b5e63cb5c3fd:SIMYTSoacha/Migrations/20240927174201_Initial.Designer.cs
                     b.Property<int>("UserTypeId")
                         .HasColumnType("int");
 
                     b.HasKey("PeopleId");
 
                     b.HasIndex("DtypeId");
+
+                    b.HasIndex("SexId");
 
                     b.HasIndex("UserTypeId");
 
@@ -458,6 +515,26 @@ namespace SIMYTSoacha.Migrations
                     b.HasKey("RestrictionId");
 
                     b.ToTable("Restrictions");
+                });
+
+            modelBuilder.Entity("SIMYTSoacha.Model.Sex", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("PreferredSex")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Sex");
                 });
 
             modelBuilder.Entity("SIMYTSoacha.Model.States", b =>
@@ -622,6 +699,58 @@ namespace SIMYTSoacha.Migrations
                     b.ToTable("UsersXPermissions");
                 });
 
+            modelBuilder.Entity("SIMYTSoacha.Model.Vehicles", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BrandId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ColorId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Echasis")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Isdeleted")
+                        .HasColumnType("bit");
+
+<<<<<<<< HEAD:SIMYTSoacha/Migrations/20240930145236_initial.Designer.cs
+                    b.Property<int>("MlineId")
+========
+                    b.Property<int>("ModelId")
+>>>>>>>> 8b4f78ed20001f006bd8e47e9085b5e63cb5c3fd:SIMYTSoacha/Migrations/20240927174201_Initial.Designer.cs
+                        .HasColumnType("int");
+
+                    b.Property<string>("Nmotor")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PeopleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+<<<<<<<< HEAD:SIMYTSoacha/Migrations/20240930145236_initial.Designer.cs
+                    b.HasIndex("BrandId");
+
+                    b.HasIndex("ColorId");
+
+                    b.HasIndex("MlineId");
+========
+                    b.HasIndex("ModelId");
+>>>>>>>> 8b4f78ed20001f006bd8e47e9085b5e63cb5c3fd:SIMYTSoacha/Migrations/20240927174201_Initial.Designer.cs
+
+                    b.HasIndex("PeopleId");
+
+                    b.ToTable("Vehicles");
+                });
+
             modelBuilder.Entity("SIMYTSoacha.Model.Contacts", b =>
                 {
                     b.HasOne("SIMYTSoacha.Model.People", "People")
@@ -730,7 +859,17 @@ namespace SIMYTSoacha.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+<<<<<<<< HEAD:SIMYTSoacha/Migrations/20240930145236_initial.Designer.cs
+                    b.HasOne("SIMYTSoacha.Model.Sex", "Sex")
+                        .WithMany()
+                        .HasForeignKey("SexId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("SIMYTSoacha.Model.UsersTypes", "UserType")
+========
+                    b.HasOne("SIMYTSoacha.Model.UsersTypes", "UsersTypes")
+>>>>>>>> 8b4f78ed20001f006bd8e47e9085b5e63cb5c3fd:SIMYTSoacha/Migrations/20240927174201_Initial.Designer.cs
                         .WithMany()
                         .HasForeignKey("UserTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -738,7 +877,13 @@ namespace SIMYTSoacha.Migrations
 
                     b.Navigation("DocumentType");
 
+<<<<<<<< HEAD:SIMYTSoacha/Migrations/20240930145236_initial.Designer.cs
+                    b.Navigation("Sex");
+
                     b.Navigation("UserType");
+========
+                    b.Navigation("UsersTypes");
+>>>>>>>> 8b4f78ed20001f006bd8e47e9085b5e63cb5c3fd:SIMYTSoacha/Migrations/20240927174201_Initial.Designer.cs
                 });
 
             modelBuilder.Entity("SIMYTSoacha.Model.Procedures", b =>
@@ -831,6 +976,50 @@ namespace SIMYTSoacha.Migrations
                     b.Navigation("Permissions");
 
                     b.Navigation("UsersType");
+                });
+
+            modelBuilder.Entity("SIMYTSoacha.Model.Vehicles", b =>
+                {
+<<<<<<<< HEAD:SIMYTSoacha/Migrations/20240930145236_initial.Designer.cs
+                    b.HasOne("SIMYTSoacha.Model.Brands", "Brand")
+                        .WithMany()
+                        .HasForeignKey("BrandId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SIMYTSoacha.Model.Colors", "Color")
+                        .WithMany()
+                        .HasForeignKey("ColorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SIMYTSoacha.Model.Models", "Models")
+                        .WithMany()
+                        .HasForeignKey("MlineId")
+========
+                    b.HasOne("SIMYTSoacha.Model.Models", "Models")
+                        .WithMany()
+                        .HasForeignKey("ModelId")
+>>>>>>>> 8b4f78ed20001f006bd8e47e9085b5e63cb5c3fd:SIMYTSoacha/Migrations/20240927174201_Initial.Designer.cs
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SIMYTSoacha.Model.People", "People")
+                        .WithMany()
+                        .HasForeignKey("PeopleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+<<<<<<<< HEAD:SIMYTSoacha/Migrations/20240930145236_initial.Designer.cs
+                    b.Navigation("Brand");
+
+                    b.Navigation("Color");
+
+========
+>>>>>>>> 8b4f78ed20001f006bd8e47e9085b5e63cb5c3fd:SIMYTSoacha/Migrations/20240927174201_Initial.Designer.cs
+                    b.Navigation("Models");
+
+                    b.Navigation("People");
                 });
 #pragma warning restore 612, 618
         }
