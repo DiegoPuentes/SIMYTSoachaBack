@@ -39,14 +39,17 @@ namespace SIMYTSoacha.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> CreatePeople([FromForm] string name, string lnames, int dtypeid, string ndocument, string sex, DateTime date, int utypeid, bool isdeleted)
+        public async Task<ActionResult> CreatePeople([FromForm] string name, string lnames,
+            int dtypeid, string ndocument, int sex, DateTime date, int utypeid, string user, 
+            string password, bool isdeleted)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            People people = await _peopleService.CreatePeopleAsync(name, lnames, dtypeid, ndocument, sex, date, utypeid, isdeleted);
+            People people = await _peopleService.CreatePeopleAsync(name, lnames, dtypeid, ndocument,
+                sex, date, utypeid, user, password, isdeleted);
             return CreatedAtAction(nameof(GetPeopleById), new { id = people.PeopleId }, people);
         }
 
@@ -54,7 +57,9 @@ namespace SIMYTSoacha.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> UpdatePeople(int id, [FromForm] string name, string lnames, int dtypeid, string ndocument, string sex, DateTime date, int utypeid, bool isdeleted)
+        public async Task<IActionResult> UpdatePeople(int id, [FromForm] string name, string lnames,
+            int dtypeid, string ndocument, int sex, DateTime date, int utypeid, string user, 
+            string password, bool isdeleted)
         {
 
             var existingPeople = await _peopleService.GetPeopleByIdAsync(id);
@@ -63,7 +68,8 @@ namespace SIMYTSoacha.Controllers
                 return NotFound();
             }
 
-            await _peopleService.UpdatePeopleAsync(name, lnames, dtypeid, ndocument, sex, date, utypeid, isdeleted);
+            await _peopleService.UpdatePeopleAsync(name, lnames, dtypeid, ndocument,
+                sex, date, utypeid, user, password, isdeleted);
             return NoContent();
         }
 

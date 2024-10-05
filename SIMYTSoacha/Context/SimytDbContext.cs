@@ -27,17 +27,25 @@ namespace SIMYTSoacha.Context
         public DbSet<Permissions> Permissions { get; set; }
         public DbSet<Infractions> Infractions { get; set; }
         public DbSet<Lines> Lines { get; set; }
-        //public DbSet<Vehicles> Vehicles { get; set; }
+        public DbSet<Vehicles> Vehicles { get; set; }
         public DbSet<Models> Models { get; set; }
         public DbSet<ModelXLine> ModelXLines { get; set; }
+        public DbSet<Brands> Brands { get; set; }
+        public DbSet<Colors> Colors { get; set; }
+        public DbSet<Sex> Sexs { get; set; }
+        public DbSet<Levels> Levels { get; set; }
+        public DbSet<LevelsxMatches> LevelsxMatches { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<UsersXPermissions>()
                 .HasNoKey();
 
-            modelBuilder.Entity<ModelXLine>().
-                HasNoKey();
+            modelBuilder.Entity<ModelXLine>()
+                .HasNoKey();
+
+            modelBuilder.Entity<LevelsxMatches>()
+                .HasNoKey();
         }
     }
 }

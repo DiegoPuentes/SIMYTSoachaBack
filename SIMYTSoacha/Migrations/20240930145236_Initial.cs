@@ -12,12 +12,41 @@ namespace SIMYTSoacha.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Brands",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Brands", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Colors",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Colors", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "DocumentsTypes",
                 columns: table => new
                 {
                     DtypesId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Dtype = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                    Dtype = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Isdeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -30,7 +59,8 @@ namespace SIMYTSoacha.Migrations
                 {
                     EcenterId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Ecenter = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
+                    Ecenter = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Isdeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -49,7 +79,8 @@ namespace SIMYTSoacha.Migrations
                     Sex = table.Column<string>(type: "nvarchar(2)", maxLength: 2, nullable: false),
                     DateBirth = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UtypeId = table.Column<int>(type: "int", nullable: false),
-                    ModifyDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    ModifyDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Isdeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -62,7 +93,8 @@ namespace SIMYTSoacha.Migrations
                 {
                     InfractionId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    InfractionName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                    InfractionName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Isdeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -70,16 +102,17 @@ namespace SIMYTSoacha.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Line",
+                name: "Lines",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Nline = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Nline = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Isdeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Line", x => x.Id);
+                    table.PrimaryKey("PK_Lines", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -88,7 +121,8 @@ namespace SIMYTSoacha.Migrations
                 {
                     MimpositionId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    MimpositionName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                    MimpositionName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Isdeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -101,7 +135,8 @@ namespace SIMYTSoacha.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    NModel = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: false)
+                    NModel = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: false),
+                    Isdeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -114,7 +149,8 @@ namespace SIMYTSoacha.Migrations
                 {
                     Pid = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Permission = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                    Permission = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Isdeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -127,11 +163,26 @@ namespace SIMYTSoacha.Migrations
                 {
                     RestrictionId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    RestrictionName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                    RestrictionName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Isdeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Restrictions", x => x.RestrictionId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Sex",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PreferredSex = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Sex", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -140,7 +191,8 @@ namespace SIMYTSoacha.Migrations
                 {
                     StateId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    StatesName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                    StatesName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Isdeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -153,7 +205,8 @@ namespace SIMYTSoacha.Migrations
                 {
                     TcontactId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Dtype = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Dtype = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Isdeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -166,7 +219,8 @@ namespace SIMYTSoacha.Migrations
                 {
                     TservicesId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    TservicesName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                    TservicesName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Isdeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -179,7 +233,8 @@ namespace SIMYTSoacha.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Tvehicle = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Tvehicle = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Isdeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -192,7 +247,8 @@ namespace SIMYTSoacha.Migrations
                 {
                     UtypesId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UtypesName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                    UtypesName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Isdeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -203,18 +259,16 @@ namespace SIMYTSoacha.Migrations
                 name: "ModelXLine",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
                     LineNumberId = table.Column<int>(type: "int", nullable: false),
-                    ModelId = table.Column<int>(type: "int", nullable: false)
+                    ModelId = table.Column<int>(type: "int", nullable: false),
+                    Isdeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ModelXLine", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ModelXLine_Line_LineNumberId",
+                        name: "FK_ModelXLine_Lines_LineNumberId",
                         column: x => x.LineNumberId,
-                        principalTable: "Line",
+                        principalTable: "Lines",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
@@ -235,10 +289,12 @@ namespace SIMYTSoacha.Migrations
                     Lnames = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DtypeId = table.Column<int>(type: "int", nullable: false),
                     Ndocument = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Sex = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SexId = table.Column<int>(type: "int", nullable: false),
                     DateBirth = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserTypeId = table.Column<int>(type: "int", nullable: false),
-                    State = table.Column<bool>(type: "bit", nullable: false)
+                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Isdeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -248,6 +304,12 @@ namespace SIMYTSoacha.Migrations
                         column: x => x.DtypeId,
                         principalTable: "DocumentsTypes",
                         principalColumn: "DtypesId",
+                        onDelete: ReferentialAction.NoAction);
+                    table.ForeignKey(
+                        name: "FK_People_Sex_SexId",
+                        column: x => x.SexId,
+                        principalTable: "Sex",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
                         name: "FK_People_UsersTypes_UserTypeId",
@@ -262,7 +324,8 @@ namespace SIMYTSoacha.Migrations
                 columns: table => new
                 {
                     UtypeId = table.Column<int>(type: "int", nullable: false),
-                    PermissionId = table.Column<int>(type: "int", nullable: false)
+                    PermissionId = table.Column<int>(type: "int", nullable: false),
+                    Isdeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -288,7 +351,8 @@ namespace SIMYTSoacha.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     TcontactId = table.Column<int>(type: "int", nullable: false),
                     PeopleId = table.Column<int>(type: "int", nullable: false),
-                    Contact = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                    Contact = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Isdeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -315,7 +379,8 @@ namespace SIMYTSoacha.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     PeopleId = table.Column<int>(type: "int", nullable: false),
                     Request = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    OfficerId = table.Column<int>(type: "int", nullable: false)
+                    OfficerId = table.Column<int>(type: "int", nullable: false),
+                    Isdeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -335,6 +400,49 @@ namespace SIMYTSoacha.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Vehicles",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    BrandId = table.Column<int>(type: "int", nullable: false),
+                    ColorId = table.Column<int>(type: "int", nullable: false),
+                    Nmotor = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PeopleId = table.Column<int>(type: "int", nullable: false),
+                    Echasis = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    MlineId = table.Column<int>(type: "int", nullable: false),
+                    Isdeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Vehicles", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Vehicles_Brands_BrandId",
+                        column: x => x.BrandId,
+                        principalTable: "Brands",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
+                    table.ForeignKey(
+                        name: "FK_Vehicles_Colors_ColorId",
+                        column: x => x.ColorId,
+                        principalTable: "Colors",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
+                    table.ForeignKey(
+                        name: "FK_Vehicles_Models_MlineId",
+                        column: x => x.MlineId,
+                        principalTable: "Models",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
+                    table.ForeignKey(
+                        name: "FK_Vehicles_People_PeopleId",
+                        column: x => x.PeopleId,
+                        principalTable: "People",
+                        principalColumn: "PeopleId",
+                        onDelete: ReferentialAction.NoAction);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Procedures",
                 columns: table => new
                 {
@@ -342,7 +450,8 @@ namespace SIMYTSoacha.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Procedure = table.Column<int>(type: "int", nullable: false),
                     StateId = table.Column<int>(type: "int", nullable: false),
-                    RequestId = table.Column<int>(type: "int", nullable: false)
+                    RequestId = table.Column<int>(type: "int", nullable: false),
+                    Isdeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -365,18 +474,19 @@ namespace SIMYTSoacha.Migrations
                 name: "DriverLicenses",
                 columns: table => new
                 {
-                    DriverLicenseId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Nlicense = table.Column<int>(type: "int", nullable: false),
                     EcenterId = table.Column<int>(type: "int", nullable: false),
                     DateIssue = table.Column<DateTime>(type: "datetime2", nullable: false),
                     StateId = table.Column<int>(type: "int", nullable: false),
                     RestrictionId = table.Column<int>(type: "int", nullable: false),
-                    ProcedureId = table.Column<int>(type: "int", nullable: false)
+                    ProcedureId = table.Column<int>(type: "int", nullable: false),
+                    Isdeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DriverLicenses", x => x.DriverLicenseId);
+                    table.PrimaryKey("PK_DriverLicenses", x => x.Id);
                     table.ForeignKey(
                         name: "FK_DriverLicenses_ExpeditionsCenters_EcenterId",
                         column: x => x.EcenterId,
@@ -411,7 +521,8 @@ namespace SIMYTSoacha.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     InfractionId = table.Column<int>(type: "int", nullable: false),
                     MimpositionId = table.Column<int>(type: "int", nullable: false),
-                    ProcedureId = table.Column<int>(type: "int", nullable: false)
+                    ProcedureId = table.Column<int>(type: "int", nullable: false),
+                    Isdeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -446,7 +557,8 @@ namespace SIMYTSoacha.Migrations
                     VstatesId = table.Column<int>(type: "int", nullable: false),
                     TserviceId = table.Column<int>(type: "int", nullable: false),
                     TvehicleId = table.Column<int>(type: "int", nullable: false),
-                    ProcedureId = table.Column<int>(type: "int", nullable: false)
+                    ProcedureId = table.Column<int>(type: "int", nullable: false),
+                    Isdeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -538,6 +650,11 @@ namespace SIMYTSoacha.Migrations
                 column: "DtypeId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_People_SexId",
+                table: "People",
+                column: "SexId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_People_UserTypeId",
                 table: "People",
                 column: "UserTypeId");
@@ -591,6 +708,26 @@ namespace SIMYTSoacha.Migrations
                 name: "IX_UsersXPermissions_UtypeId",
                 table: "UsersXPermissions",
                 column: "UtypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Vehicles_BrandId",
+                table: "Vehicles",
+                column: "BrandId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Vehicles_ColorId",
+                table: "Vehicles",
+                column: "ColorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Vehicles_MlineId",
+                table: "Vehicles",
+                column: "MlineId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Vehicles_PeopleId",
+                table: "Vehicles",
+                column: "PeopleId");
         }
 
         /// <inheritdoc />
@@ -618,6 +755,9 @@ namespace SIMYTSoacha.Migrations
                 name: "UsersXPermissions");
 
             migrationBuilder.DropTable(
+                name: "Vehicles");
+
+            migrationBuilder.DropTable(
                 name: "TypesContacts");
 
             migrationBuilder.DropTable(
@@ -633,10 +773,7 @@ namespace SIMYTSoacha.Migrations
                 name: "Mimpositions");
 
             migrationBuilder.DropTable(
-                name: "Line");
-
-            migrationBuilder.DropTable(
-                name: "Models");
+                name: "Lines");
 
             migrationBuilder.DropTable(
                 name: "Procedures");
@@ -651,6 +788,15 @@ namespace SIMYTSoacha.Migrations
                 name: "Permissions");
 
             migrationBuilder.DropTable(
+                name: "Brands");
+
+            migrationBuilder.DropTable(
+                name: "Colors");
+
+            migrationBuilder.DropTable(
+                name: "Models");
+
+            migrationBuilder.DropTable(
                 name: "Requests");
 
             migrationBuilder.DropTable(
@@ -661,6 +807,9 @@ namespace SIMYTSoacha.Migrations
 
             migrationBuilder.DropTable(
                 name: "DocumentsTypes");
+
+            migrationBuilder.DropTable(
+                name: "Sex");
 
             migrationBuilder.DropTable(
                 name: "UsersTypes");

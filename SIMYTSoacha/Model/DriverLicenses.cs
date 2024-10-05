@@ -7,12 +7,12 @@ namespace SIMYTSoacha.Model
     public class DriverLicenses
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int DriverLicenseId { get; set; }
+        public int Id { get; set; }
         public required int Nlicense {  get; set; }
         public required int EcenterId { get; set; }
         [ForeignKey("EcenterId")]
         public required virtual Ecenters Ecenters { get; set; }
-        public DateTime DateIssue { get; set; }
+        public required DateTime DateIssue { get; set; }
         public int StateId { get; set; }
         [ForeignKey("StateId")]
         public required virtual States States { get; set; }
