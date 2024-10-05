@@ -292,8 +292,11 @@ namespace SIMYTSoacha.Migrations
                     SexId = table.Column<int>(type: "int", nullable: false),
                     DateBirth = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserTypeId = table.Column<int>(type: "int", nullable: false),
+<<<<<<<< HEAD:SIMYTSoacha/Migrations/20240930145236_Initial.cs
                     UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+========
+>>>>>>>> 8b4f78ed20001f006bd8e47e9085b5e63cb5c3fd:SIMYTSoacha/Migrations/20240927174201_Initial.cs
                     Isdeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -410,13 +413,18 @@ namespace SIMYTSoacha.Migrations
                     Nmotor = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PeopleId = table.Column<int>(type: "int", nullable: false),
                     Echasis = table.Column<string>(type: "nvarchar(max)", nullable: false),
+<<<<<<<< HEAD:SIMYTSoacha/Migrations/20240930145236_Initial.cs
                     MlineId = table.Column<int>(type: "int", nullable: false),
+========
+                    ModelId = table.Column<int>(type: "int", nullable: false),
+>>>>>>>> 8b4f78ed20001f006bd8e47e9085b5e63cb5c3fd:SIMYTSoacha/Migrations/20240927174201_Initial.cs
                     Isdeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Vehicles", x => x.Id);
                     table.ForeignKey(
+<<<<<<<< HEAD:SIMYTSoacha/Migrations/20240930145236_Initial.cs
                         name: "FK_Vehicles_Brands_BrandId",
                         column: x => x.BrandId,
                         principalTable: "Brands",
@@ -431,6 +439,10 @@ namespace SIMYTSoacha.Migrations
                     table.ForeignKey(
                         name: "FK_Vehicles_Models_MlineId",
                         column: x => x.MlineId,
+========
+                        name: "FK_Vehicles_Models_ModelId",
+                        column: x => x.ModelId,
+>>>>>>>> 8b4f78ed20001f006bd8e47e9085b5e63cb5c3fd:SIMYTSoacha/Migrations/20240927174201_Initial.cs
                         principalTable: "Models",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.NoAction);
@@ -710,6 +722,7 @@ namespace SIMYTSoacha.Migrations
                 column: "UtypeId");
 
             migrationBuilder.CreateIndex(
+<<<<<<<< HEAD:SIMYTSoacha/Migrations/20240930145236_Initial.cs
                 name: "IX_Vehicles_BrandId",
                 table: "Vehicles",
                 column: "BrandId");
@@ -723,6 +736,11 @@ namespace SIMYTSoacha.Migrations
                 name: "IX_Vehicles_MlineId",
                 table: "Vehicles",
                 column: "MlineId");
+========
+                name: "IX_Vehicles_ModelId",
+                table: "Vehicles",
+                column: "ModelId");
+>>>>>>>> 8b4f78ed20001f006bd8e47e9085b5e63cb5c3fd:SIMYTSoacha/Migrations/20240927174201_Initial.cs
 
             migrationBuilder.CreateIndex(
                 name: "IX_Vehicles_PeopleId",
@@ -788,12 +806,15 @@ namespace SIMYTSoacha.Migrations
                 name: "Permissions");
 
             migrationBuilder.DropTable(
+<<<<<<<< HEAD:SIMYTSoacha/Migrations/20240930145236_Initial.cs
                 name: "Brands");
 
             migrationBuilder.DropTable(
                 name: "Colors");
 
             migrationBuilder.DropTable(
+========
+>>>>>>>> 8b4f78ed20001f006bd8e47e9085b5e63cb5c3fd:SIMYTSoacha/Migrations/20240927174201_Initial.cs
                 name: "Models");
 
             migrationBuilder.DropTable(

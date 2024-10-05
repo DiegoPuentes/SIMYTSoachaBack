@@ -22,47 +22,6 @@ namespace SIMYTSoacha.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("SIMYTSoacha.Model.Brands", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Brands");
-                });
-
-            modelBuilder.Entity("SIMYTSoacha.Model.Colors", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Colors");
-                });
-
             modelBuilder.Entity("SIMYTSoacha.Model.Contacts", b =>
                 {
                     b.Property<int>("ContactId")
@@ -117,11 +76,11 @@ namespace SIMYTSoacha.Migrations
 
             modelBuilder.Entity("SIMYTSoacha.Model.DriverLicenses", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("DriverLicenseId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DriverLicenseId"));
 
                     b.Property<DateTime>("DateIssue")
                         .HasColumnType("datetime2");
@@ -144,7 +103,7 @@ namespace SIMYTSoacha.Migrations
                     b.Property<int>("StateId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("DriverLicenseId");
 
                     b.HasIndex("EcenterId");
 
@@ -382,14 +341,7 @@ namespace SIMYTSoacha.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("SexId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserName")
+                    b.Property<string>("Sex")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -399,8 +351,6 @@ namespace SIMYTSoacha.Migrations
                     b.HasKey("PeopleId");
 
                     b.HasIndex("DtypeId");
-
-                    b.HasIndex("SexId");
 
                     b.HasIndex("UserTypeId");
 
@@ -505,26 +455,6 @@ namespace SIMYTSoacha.Migrations
                     b.HasKey("RestrictionId");
 
                     b.ToTable("Restrictions");
-                });
-
-            modelBuilder.Entity("SIMYTSoacha.Model.Sex", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("PreferredSex")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Sex");
                 });
 
             modelBuilder.Entity("SIMYTSoacha.Model.States", b =>
@@ -710,7 +640,7 @@ namespace SIMYTSoacha.Migrations
                     b.Property<bool>("Isdeleted")
                         .HasColumnType("bit");
 
-                    b.Property<int>("MlineId")
+                    b.Property<int>("ModelId")
                         .HasColumnType("int");
 
                     b.Property<string>("Nmotor")
@@ -722,11 +652,7 @@ namespace SIMYTSoacha.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BrandId");
-
-                    b.HasIndex("ColorId");
-
-                    b.HasIndex("MlineId");
+                    b.HasIndex("ModelId");
 
                     b.HasIndex("PeopleId");
 
@@ -841,13 +767,7 @@ namespace SIMYTSoacha.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SIMYTSoacha.Model.Sex", "Sex")
-                        .WithMany()
-                        .HasForeignKey("SexId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SIMYTSoacha.Model.UsersTypes", "UserType")
+                    b.HasOne("SIMYTSoacha.Model.UsersTypes", "UsersTypes")
                         .WithMany()
                         .HasForeignKey("UserTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -855,9 +775,7 @@ namespace SIMYTSoacha.Migrations
 
                     b.Navigation("DocumentType");
 
-                    b.Navigation("Sex");
-
-                    b.Navigation("UserType");
+                    b.Navigation("UsersTypes");
                 });
 
             modelBuilder.Entity("SIMYTSoacha.Model.Procedures", b =>
@@ -954,21 +872,9 @@ namespace SIMYTSoacha.Migrations
 
             modelBuilder.Entity("SIMYTSoacha.Model.Vehicles", b =>
                 {
-                    b.HasOne("SIMYTSoacha.Model.Brands", "Brand")
-                        .WithMany()
-                        .HasForeignKey("BrandId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SIMYTSoacha.Model.Colors", "Color")
-                        .WithMany()
-                        .HasForeignKey("ColorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("SIMYTSoacha.Model.Models", "Models")
                         .WithMany()
-                        .HasForeignKey("MlineId")
+                        .HasForeignKey("ModelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -977,10 +883,6 @@ namespace SIMYTSoacha.Migrations
                         .HasForeignKey("PeopleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Brand");
-
-                    b.Navigation("Color");
 
                     b.Navigation("Models");
 
