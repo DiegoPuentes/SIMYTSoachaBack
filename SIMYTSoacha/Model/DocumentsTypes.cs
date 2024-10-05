@@ -3,13 +3,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SIMYTSoacha.Model
 {
-    [Table("States")]
-    public class States
+    [Table("DocumentsTypes")]
+    public class DocumentsTypes
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int StateId { get; set; }
+        public int DtypesId { get; set; }
         [MaxLength(50)]
-        public required string StatesName { get; set; }
+        public required string Dtype { get; set; }
         public bool Isdeleted { get; set; } = false;
     }
 }

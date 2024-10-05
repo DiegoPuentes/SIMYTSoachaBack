@@ -6,9 +6,10 @@ namespace SIMYTSoacha.Model
     [Table("Restrictions")]
     public class Restrictions
     {
-        [Key]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int RestrictionId { get; set; }
         [MaxLength(50)]
-        public string? RestrictionName { get; set; }
+        public required string RestrictionName { get; set; }
+        public bool Isdeleted { get; set; } = false;
     }
 }
