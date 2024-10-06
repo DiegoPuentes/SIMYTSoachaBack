@@ -67,10 +67,10 @@ builder.Services.AddScoped<ITrafficService, TrafficService>();
 builder.Services.AddScoped<IHistoriesService, HistoriesService>();
 builder.Services.AddScoped<ILevelsService, LevelService>();
 builder.Services.AddScoped<ILxMService, LxMService>();
-builder.Services.AddScoped<IDocService, DocService>();
 builder.Services.AddScoped<IVehicleService, VehicleService>();
 builder.Services.AddScoped<IMatchServices, MatchService>();
-
+builder.Services.AddScoped<IContactService, ContactService>();
+builder.Services.AddScoped<IDocService, DocService>();
 
 
 builder.Services.AddControllers();
