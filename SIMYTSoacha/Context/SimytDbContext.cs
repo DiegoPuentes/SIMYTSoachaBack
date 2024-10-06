@@ -35,6 +35,7 @@ namespace SIMYTSoacha.Context
         public DbSet<Sex> Sexs { get; set; }
         public DbSet<Levels> Levels { get; set; }
         public DbSet<LevelsxMatches> LevelsxMatches { get; set; }
+        public DbSet<Matches> Matches { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -46,6 +47,8 @@ namespace SIMYTSoacha.Context
 
             modelBuilder.Entity<LevelsxMatches>()
                 .HasNoKey();
+            //Builder Triggers
+            modelBuilder.Entity<People>().ToTable(tb => tb.UseSqlOutputClause(false));
         }
     }
 }

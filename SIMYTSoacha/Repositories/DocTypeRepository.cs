@@ -21,26 +21,26 @@ namespace SIMYTSoacha.Repositories
         }
         public async Task CreateDocAsync(DocumentsTypes doc)
         {
-            _context.Dtype.AddAsync(doc);
-            _context.SaveChanges();
+            _context.Dtypes.Add(doc);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<DocumentsTypes>> GetAllDocAsync()
         {
-            return await _context.Dtype
+            return await _context.Dtypes
                 .Where(s => !s.Isdeleted)
                 .ToListAsync();
         }
 
         public async Task<DocumentsTypes> GetDocByIdAsync(int id)
         {
-            return await _context.Dtype
+            return await _context.Dtypes
                 .FirstOrDefaultAsync(s => s.DtypesId == id && !s.Isdeleted);
         }
 
         public async Task SoftDeleteDocAsync(int id)
         {
-            var subject = await _context.Dtype.FindAsync(id);
+            var subject = await _context.Dtypes.FindAsync(id);
             if (subject != null)
             {
                 subject.Isdeleted = true;
@@ -50,8 +50,8 @@ namespace SIMYTSoacha.Repositories
 
         public async Task UpdateDocAsync(DocumentsTypes doc)
         {
-            _context.Dtype.Update(doc);
-            _context.SaveChangesAsync();
+            _context.Dtypes.Update(doc);
+            await _context.SaveChangesAsync();
         }
     }
 }
