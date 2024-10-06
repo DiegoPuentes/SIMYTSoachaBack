@@ -21,7 +21,7 @@ namespace SIMYTSoacha.Repositories
         }
         public async Task CreateDocAsync(DocumentsTypes doc)
         {
-            _context.Dtypes.AddAsync(doc);
+            _context.Dtypes.Add(doc);
             await _context.SaveChangesAsync();
         }
 
@@ -51,7 +51,7 @@ namespace SIMYTSoacha.Repositories
         public async Task UpdateDocAsync(DocumentsTypes doc)
         {
             _context.Dtypes.Update(doc);
-            _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
     }
 }

@@ -22,7 +22,7 @@ namespace SIMYTSoacha.Repositories
         public async Task CreateContactAsync(Contacts contact)
         {
             _context.Contacts.Add(contact);
-            await _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Contacts>> GetAllContactAsync()

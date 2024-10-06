@@ -10,6 +10,7 @@ namespace SIMYTSoacha.Model
         public virtual required Levels Levels { get; set; }
         public int MatchId { get; set; }
         public virtual required People Matchs { get; set; }
+        public int Scored {  get; set; }
         public required bool IsDeleted { get; set; }
     }
 }

@@ -2,6 +2,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SIMYTSoacha.Model;
 using SIMYTSoacha.Services;
+using System.Security.Cryptography;
 
 
 namespace SIMYTSoacha.Controllers
@@ -43,9 +44,11 @@ namespace SIMYTSoacha.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> CreatePeople([FromForm] string name, string lnames,
-            int dtypeid, string ndocument, int sex, DateTime date, int utypeid, string user, 
+            int dtypeid, string ndocument, int sex, DateTime date, int utypeid, string user,
             string password, bool isdeleted)
         {
+            SHA512? encryptedPassword = SHA512.Create(name);
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -61,7 +64,7 @@ namespace SIMYTSoacha.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdatePeople(int id, [FromForm] string name, string lnames,
-            int dtypeid, string ndocument, int sex, DateTime date, int utypeid, string user, 
+            int dtypeid, string ndocument, int sex, DateTime date, int utypeid, string user,
             string password, bool isdeleted)
         {
 

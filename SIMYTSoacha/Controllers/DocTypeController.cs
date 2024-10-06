@@ -8,9 +8,9 @@ namespace SIMYTSoacha.Controllers
     [ApiController]
     public class DocTypeController : ControllerBase
     {
-        private readonly ContactService _docTypeService;
+        private readonly IDocService _docTypeService;
 
-        public DocTypeController(ContactService docTypeService)
+        public DocTypeController(IDocService docTypeService)
         {
             _docTypeService = docTypeService;
         }
@@ -67,7 +67,7 @@ namespace SIMYTSoacha.Controllers
                 return NotFound("This Doc has not been created");
             }
 
-            await _docTypeService.UpdateContactAsync(doc);
+            await _docTypeService.UpdateDocAsync(doc);
             return NoContent();
         }
 
@@ -80,7 +80,7 @@ namespace SIMYTSoacha.Controllers
             if (people == null)
                 return NotFound();
 
-            await _docTypeService.SoftDeleteDocAsync(id);
+            await _docTypeService.SoftDeleteDoctAsync(id);
             return NoContent();
         }
     }
