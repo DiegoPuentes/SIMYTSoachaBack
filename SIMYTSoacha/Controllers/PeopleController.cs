@@ -11,8 +11,11 @@ namespace SIMYTSoacha.Controllers
     [ApiController]
     public class PeopleController : ControllerBase
     {
-}
         private readonly IPeopleService _peopleService;
+        public static class UserSession
+        {
+            public static int UserTypeId { get; set; } = 0;
+        }
 
         public PeopleController(IPeopleService peopleService)
         {
@@ -40,6 +43,7 @@ namespace SIMYTSoacha.Controllers
             return Ok(people);
         }
 
+
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -47,7 +51,12 @@ namespace SIMYTSoacha.Controllers
             int dtypeid, string ndocument, int sex, DateTime date, int utypeid, string user,
             string password, bool isdeleted)
         {
-            SHA512? encryptedPassword = SHA512.Create(name);
+            bool permision = await CheckUserPermission();
+
+            if (permision != false)
+            {
+                return BadRequest("No tienes los permisos");
+            }
 
             if (!ModelState.IsValid)
             {
@@ -86,11 +95,55 @@ namespace SIMYTSoacha.Controllers
         {
             var people = await _peopleService.GetPeopleByIdAsync(id);
             if (people == null)
+            {
                 return NotFound();
+            }
 
             await _peopleService.SoftDeletePeopleAsync(id);
             return NoContent();
         }
+        
+        [HttpPost("Login")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> LoginPeople([FromForm] string userName, [FromForm] string pass)
+        {
 
+            if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(pass))
+            {
+                return BadRequest("El nombre de usuario o contraseña no pueden estar vacíos.");
+            }
+
+            var login = await _peopleService.LoginAsync(userName, pass);
+
+            if (login == null)
+            {
+                return NotFound("No coincide con nada.");
+            }
+
+            UserSession.UserTypeId = login.UserTypeId;
+
+            return Ok(new { Token = "Validación exitosa", UserTypeId = login.UserTypeId });
+        }
+
+
+        [HttpGet("Permission")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<bool> CheckUserPermission()
+        {
+            bool hasPermission = await _peopleService.PermissionAsync(UserSession.UserTypeId);
+
+            if (hasPermission)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }

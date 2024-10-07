@@ -8,9 +8,9 @@ namespace SIMYTSoacha.Controllers
     [ApiController]
     public class DocTypeController : ControllerBase
     {
-        private readonly ContactService _docTypeService;
+        private readonly IDocService _docTypeService;
 
-        public DocTypeController(ContactService docTypeService)
+        public DocTypeController(IDocService docTypeService)
         {
             _docTypeService = docTypeService;
         }
@@ -39,7 +39,7 @@ namespace SIMYTSoacha.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> CreateDoc([FromBody] DocumentsTypes doc)
+        public async Task<ActionResult> CreateDoc([FromForm] DocumentsTypes doc)
         {
             if (!ModelState.IsValid)
             {
@@ -54,20 +54,23 @@ namespace SIMYTSoacha.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> UpdateDoc(int id, [FromBody] DocumentsTypes doc)
+        public async Task<IActionResult> UpdateDoc(int id, [FromForm] DocumentsTypes doc)
         {
             if (id != doc.DtypesId)
             {
                 return BadRequest("This Doc does not modifie");
             }
 
-            var existingPeople = await _docTypeService.GetDocByIdAsync(id);
-            if (existingPeople == null)
+            var existingDoc = await _docTypeService.GetDocByIdAsync(id);
+            if (existingDoc == null)
             {
                 return NotFound("This Doc has not been created");
             }
 
-            await _docTypeService.UpdateDocAsync(doc);
+            existingDoc.Dtype = doc.Dtype;
+            existingDoc.Isdeleted = doc.Isdeleted;
+
+            await _docTypeService.UpdateDocAsync(existingDoc);
             return NoContent();
         }
 

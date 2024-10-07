@@ -4,35 +4,35 @@ using SIMYTSoacha.Model;
 
 namespace SIMYTSoacha.Repositories
 {
-    public interface IDocRepository
+    public interface IContactRepository
     {
-        Task<IEnumerable<DocumentsTypes>> GetAllContactAsync();
-        Task<DocumentsTypes> GetContactByIdAsync(int id);
-        Task CreateContactAsync(DocumentsTypes contact);
-        Task UpdateContactAsync(DocumentsTypes contact);
+        Task<IEnumerable<Contacts>> GetAllContactAsync();
+        Task<Contacts> GetContactByIdAsync(int id);
+        Task CreateContactAsync(Contacts contact);
+        Task UpdateContactAsync(Contacts contact);
         Task SoftDeleteContactAsync(int id);
     }
-    public class ContactRepository : IDocRepository
+    public class ContactRepository : IContactRepository
     {
         private readonly SimytDbContext _context;
         public ContactRepository(SimytDbContext context)
         {
             _context = context;
         }
-        public async Task CreateContactAsync(DocumentsTypes contact)
+        public async Task CreateContactAsync(Contacts contact)
         {
             _context.Contacts.Add(contact);
-            await _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<DocumentsTypes>> GetAllContactAsync()
+        public async Task<IEnumerable<Contacts>> GetAllContactAsync()
         {
             return await _context.Contacts
                 .Where(s => !s.Isdeleted)
                 .ToListAsync();
         }
 
-        public async Task<DocumentsTypes> GetContactByIdAsync(int id)
+        public async Task<Contacts> GetContactByIdAsync(int id)
         {
             return await _context.Contacts
                 .FirstOrDefaultAsync(s => s.ContactId == id && !s.Isdeleted);
@@ -48,10 +48,10 @@ namespace SIMYTSoacha.Repositories
             }
         }
 
-        public async Task UpdateContactAsync(DocumentsTypes contact)
+        public async Task UpdateContactAsync(Contacts contact)
         {
             _context.Contacts.Update(contact);
-            _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
     }
 }

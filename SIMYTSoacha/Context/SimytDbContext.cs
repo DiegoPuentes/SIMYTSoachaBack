@@ -42,13 +42,13 @@ namespace SIMYTSoacha.Context
 
         {
             modelBuilder.Entity<UsersXPermissions>()
-                .HasNoKey();
+                .HasKey(up => new { up.UtypeId, up.PermissionId });
 
             modelBuilder.Entity<ModelXLine>()
-                .HasNoKey();
+                .HasKey(ml => new { ml.LineNumberId, ml.ModelId });
 
             modelBuilder.Entity<LevelsxMatches>()
-                .HasNoKey();
+                .HasKey(lm => new { lm.LevelId, lm.MatchId });
             //Builder Triggers
             modelBuilder.Entity<People>().ToTable(tb => tb.UseSqlOutputClause(false));
         }
