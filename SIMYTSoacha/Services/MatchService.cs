@@ -1,27 +1,22 @@
 ﻿using SIMYTSoacha.Model;
-using SIMYTSoacha.Repository;
+using SIMYTSoacha.Repositories;
 
 namespace SIMYTSoacha.Services
 {
     public interface IMatchServices
     {
         Task<IEnumerable<Matches>> GetallMatchAsync();
-
         Task<Matches> GetMatchesByIdAsync(int id);
-
         Task CreateMatchesAsync(Matches match);
-
         Task UpdateMatchesAsync(Matches match);
-
         Task DeleteMatchesAsync(int id);
-
     }
 
-    public class MatchServices : IMatchServices
+    public class MatchService : IMatchServices
     {
         private readonly IMatchRepository _matchRepository;
 
-        public MatchServices(IMatchRepository match)
+        public MatchService(IMatchRepository match)
         {
             _matchRepository = match;
 

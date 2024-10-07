@@ -22,7 +22,7 @@ namespace SIMYTSoacha.Model
         [ForeignKey("UserTypeId")]
         public virtual required UsersTypes UserType { get; set; }
         public required string UserName { get; set; }
-        public required string Password { get; set; }
+        public required string Passcodes { get; set; }
         public bool Isdeleted { get; set; } = false;
 
     }

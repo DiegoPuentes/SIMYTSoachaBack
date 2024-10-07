@@ -12,6 +12,8 @@ namespace SIMYTSoacha.Services
         Task UpdatePeopleAsync(string name, string lnames, int dtypeid, string ndocument, int sex, 
             DateTime date, int utypeid, string user, string password, bool isdeleted);
         Task SoftDeletePeopleAsync(int id);
+        Task<People> LoginAsync(string user, string pass);
+        Task<bool> PermissionAsync(int id);
     }
 
     public class PeopleService : IPeopleService
@@ -52,6 +54,16 @@ namespace SIMYTSoacha.Services
         public async Task SoftDeletePeopleAsync(int id)
         {
             await _peopleRepository.SoftDeletePeopleAsync(id);
+        }
+
+        public async Task<People> LoginAsync(string user, string pass)
+        {
+            return await _peopleRepository.LoginAsync(user, pass); 
+        }
+
+        public async Task<bool> PermissionAsync(int id)
+        {
+            return await _peopleRepository.PermissionAsync(id);
         }
     }
 }

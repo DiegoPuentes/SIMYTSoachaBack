@@ -16,7 +16,7 @@ namespace SIMYTSoacha.Services
     {
         private readonly IContactRepository _contRepository;
 
-        public ContactService(ContactRepository conRepository)
+        public ContactService(IContactRepository conRepository)
         {
             _contRepository = conRepository;
         }

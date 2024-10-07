@@ -67,14 +67,15 @@ namespace SIMYTSoacha.Controllers
                 return NotFound();
             }
 
-            existingHistories.Name = histories.Name;
+            existingHistories.Fnames = histories.Fnames;
             existingHistories.Lname = histories.Lname;
             existingHistories.DtypeId = histories.DtypeId;
             existingHistories.SexId = histories.SexId;
+            existingHistories.Ndocument = histories.Ndocument;
             existingHistories.DateBirth = histories.DateBirth;
             existingHistories.UtypeId = histories.UtypeId;
             existingHistories.UserName = histories.UserName;
-            existingHistories.Password = histories.Password;
+            existingHistories.Passcode = histories.Passcode;
             existingHistories.Isdeleted = histories.Isdeleted;
 
             await service.UpdateHistoriesAsync(existingHistories);
