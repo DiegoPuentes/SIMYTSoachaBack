@@ -9,36 +9,36 @@ var builder = WebApplication.CreateBuilder(args);
 var conString = builder.Configuration.GetConnectionString("Connection");
 builder.Services.AddDbContext<SimytDbContext>(options => options.UseSqlServer(conString));
 
-builder.Services.AddScoped<IPeopleRepository, PeopleRepository>();
 builder.Services.AddScoped<IBrandRepository, BrandRepository>();
-builder.Services.AddScoped<IColorRepository, ColorRepository>();
-builder.Services.AddScoped<IDriverRepository, DriverRepository>();
 builder.Services.AddScoped<ICenterRepository, CenterRepository>();
+builder.Services.AddScoped<IColorRepository, ColorRepository>();
+builder.Services.AddScoped<IContactRepository, ContactRepository>();
+builder.Services.AddScoped<IDocRepository, DocTypeRepository>();
+builder.Services.AddScoped<IDriverRepository, DriverRepository>();
 builder.Services.AddScoped<IFinesRepository, FinesRepository>();
-builder.Services.AddScoped<IInfractionRepository, InfractionRepository>();
-builder.Services.AddScoped<IRestrictionRepository, RestrictionRepository>();
-builder.Services.AddScoped<ILineRepository, LineRepository>();
+builder.Services.AddScoped<IHistoriesRepository, HistoriesRepository>();
 builder.Services.AddScoped<IImpositionRepository, ImpositionRepository>();
+builder.Services.AddScoped<IInfractionRepository, InfractionRepository>();
+builder.Services.AddScoped<ILevelsRepository, LevelsRepository>();
+builder.Services.AddScoped<ILineRepository, LineRepository>();
+builder.Services.AddScoped<ILxMRepository, LxMRepository>();
+builder.Services.AddScoped<IMatchRepository, MatchRepository>();
 builder.Services.AddScoped<IModelRepository, ModelRepository>();
 builder.Services.AddScoped<IMxLRepository, MxLRepository>();
+builder.Services.AddScoped<IPeopleRepository, PeopleRepository>();
 builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
 builder.Services.AddScoped<IProcedureRepository, ProcedureRepository>();
 builder.Services.AddScoped<IRequestRepository, RequestRepository>();
+builder.Services.AddScoped<IRestrictionRepository, RestrictionRepository>();
 builder.Services.AddScoped<ISexRepository, SexRepository>();
 builder.Services.AddScoped<IStateRepository, StateRepository>();
-builder.Services.AddScoped<IContactRepository, ContactRepository>();
 builder.Services.AddScoped<ITcontactRepository, TcontactRepository>();
+builder.Services.AddScoped<ITrafficRepository, TrafficRepository>();
 builder.Services.AddScoped<ITserviceRepository, TserviceRepository>();
 builder.Services.AddScoped<ITvehicleRepository, TvehicleRepository>();
 builder.Services.AddScoped<IUsertRepository, UsertRepository>();
 builder.Services.AddScoped<IUxPRepository, UxPRepository>();
-builder.Services.AddScoped<ITrafficRepository, TrafficRepository>();
-builder.Services.AddScoped<IHistoriesRepository, HistoriesRepository>();
-builder.Services.AddScoped<ILevelsRepository, LevelsRepository>();
-builder.Services.AddScoped<ILxMRepository, LxMRepository>();
-builder.Services.AddScoped<IDocRepository, DocTypeRepository>();
 builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
-builder.Services.AddScoped<IMatchRepository, MatchRepository>();
 
 builder.Services.AddScoped<IPeopleService, PeopleService>();
 builder.Services.AddScoped<IBrandService, BrandService>();
@@ -80,11 +80,10 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+
+app.UseSwagger();
+app.UseSwaggerUI();
+
 
 app.UseHttpsRedirection();
 
