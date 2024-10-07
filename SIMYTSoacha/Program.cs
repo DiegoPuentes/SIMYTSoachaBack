@@ -38,6 +38,7 @@ builder.Services.AddScoped<ILevelsRepository, LevelsRepository>();
 builder.Services.AddScoped<ILxMRepository, LxMRepository>();
 builder.Services.AddScoped<IDocRepository, DocTypeRepository>();
 builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
+builder.Services.AddScoped<IMatchRepository, MatchRepository>();
 
 builder.Services.AddScoped<IPeopleService, PeopleService>();
 builder.Services.AddScoped<IBrandService, BrandService>();
@@ -68,6 +69,7 @@ builder.Services.AddScoped<IContactService, ContactService>();
 builder.Services.AddScoped<ITcontactService, TcontactService>();
 builder.Services.AddScoped<IDocService, DocService>();
 builder.Services.AddScoped<IVehicleService, VehicleService>();
+builder.Services.AddScoped<IMatchServices, MatchService>();
 
 
 builder.Services.AddControllers();
