@@ -8,9 +8,9 @@ namespace SIMYTSoacha.Controllers
     [ApiController]
     public class DocTypeController : ControllerBase
     {
-        private readonly IDocService _docTypeService;
+        private readonly ContactService _docTypeService;
 
-        public DocTypeController(IDocService docTypeService)
+        public DocTypeController(ContactService docTypeService)
         {
             _docTypeService = docTypeService;
         }
