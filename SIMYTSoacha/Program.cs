@@ -1,4 +1,3 @@
-
 using Microsoft.EntityFrameworkCore;
 using SIMYTSoacha.Context;
 using SIMYTSoacha.Repositories;
@@ -39,7 +38,6 @@ builder.Services.AddScoped<ILxMRepository, LxMRepository>();
 builder.Services.AddScoped<IContactRepository, ContactRepository>();
 builder.Services.AddScoped<IDocRepository, DocTypeRepository>();
 builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
-builder.Services.AddScoped<IMatchRepository, MatchRepository>();
 
 builder.Services.AddScoped<IPeopleService, PeopleService>();
 builder.Services.AddScoped<IBrandService, BrandService>();
@@ -67,10 +65,9 @@ builder.Services.AddScoped<ITrafficService, TrafficService>();
 builder.Services.AddScoped<IHistoriesService, HistoriesService>();
 builder.Services.AddScoped<ILevelsService, LevelService>();
 builder.Services.AddScoped<ILxMService, LxMService>();
-builder.Services.AddScoped<IVehicleService, VehicleService>();
-builder.Services.AddScoped<IMatchServices, MatchService>();
 builder.Services.AddScoped<IContactService, ContactService>();
 builder.Services.AddScoped<IDocService, DocService>();
+builder.Services.AddScoped<IVehicleService, VehicleService>();
 
 
 builder.Services.AddControllers();
