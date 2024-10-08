@@ -52,7 +52,7 @@ namespace SIMYTSoacha.Repositories
         public async Task UpdateColorAsync(Colors colors)
         {
             _simytDbContext.Colors.Update(colors);
-            _simytDbContext.SaveChangesAsync();
+            await _simytDbContext.SaveChangesAsync();
         }
     }
 }

@@ -22,7 +22,7 @@ namespace SIMYTSoacha.Repositories
         public async Task CreateRestriAsync(Restrictions restri)
         {
             _context.Restrictions.Add(restri);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Restrictions>> GetAllRestriAsync()
@@ -51,7 +51,7 @@ namespace SIMYTSoacha.Repositories
         public async Task UpdateRestriAsync(Restrictions restri)
         {
             _context.Restrictions.Update(restri);
-            _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
     }
 }

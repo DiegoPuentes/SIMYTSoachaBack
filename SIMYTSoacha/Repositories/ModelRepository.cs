@@ -23,7 +23,7 @@ namespace SIMYTSoacha.Repositories
         public async Task CreateModelAsync(Models model)
         {
             _context.Models.Add(model);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Models>> GetAllModelAsync()

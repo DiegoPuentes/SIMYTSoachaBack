@@ -53,7 +53,7 @@ namespace SIMYTSoacha.Repositories
         public async Task UpdatePermissionAsync(Permissions permissions)
         {
             _context.Permissions.Update(permissions);
-            _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
     }
 }

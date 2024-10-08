@@ -22,7 +22,7 @@ namespace SIMYTSoacha.Repositories
 
         public async Task CreateCenterAsync(Ecenters ecenters)
         {
-            _context.Ecenters.AddAsync(ecenters);
+            _context.Ecenters.Add(ecenters);
             await _context.SaveChangesAsync();
         }
 
@@ -52,7 +52,7 @@ namespace SIMYTSoacha.Repositories
         public async Task UpdateCenterAsync(Ecenters ecenters)
         {
             _context.Ecenters.Update(ecenters);
-            _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
     }
 }

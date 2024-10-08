@@ -74,7 +74,7 @@ namespace SIMYTSoacha.Repositories
                 Isdeleted = isdeleted
             };
             _context.Fines.Update(fine);
-            _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
     }
 }
