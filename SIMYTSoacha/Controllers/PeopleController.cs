@@ -119,7 +119,7 @@ namespace SIMYTSoacha.Controllers
 
             if (login == null)
             {
-                return NotFound("No coincide con nada.");
+                return NotFound("Los datos proporcionados no coinciden con nada.");
             }
 
             UserSession.UserTypeId = login.UserTypeId;
