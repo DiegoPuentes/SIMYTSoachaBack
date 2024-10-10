@@ -64,6 +64,8 @@ namespace SIMYTSoacha.Controllers
             }
 
             existingMatches.PeopleId = Peopleid;
+            existingMatches.People = null;
+            existingMatches.Date = date;
             existingMatches.IsDeleted = isdeleted;
 
             await matchServices.UpdateMatchesAsync(existingMatches);

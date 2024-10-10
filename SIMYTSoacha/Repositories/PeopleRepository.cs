@@ -87,26 +87,7 @@ namespace SIMYTSoacha.Repositories
 
         public async Task UpdatePeopleAsync(People people)
         {
-            string encryptPass = Encrypt(people.Passcodes);
-
-            People updatePeople = new People
-            {
-                Names = people.Names,
-                Lnames = people.Lnames,
-                DtypeId = people.DtypeId,
-                DocumentType = people.DocumentType,
-                Ndocument = people.Ndocument,
-                SexId = people.SexId,
-                Sex = people.Sex,
-                DateBirth = people.DateBirth,
-                UserTypeId = people.UserTypeId,
-                UserType = people.UserType,
-                UserName = people.UserName,
-                Passcodes = encryptPass,
-                Isdeleted = people.Isdeleted
-            };
-
-            _context.People.Update(updatePeople);
+            _context.People.Update(people);
             await _context.SaveChangesAsync();
         }
         public static string Encrypt(string str)

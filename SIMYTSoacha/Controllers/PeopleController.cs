@@ -53,19 +53,21 @@ namespace SIMYTSoacha.Controllers
         {
             bool permision = await CheckUserPermission();
 
-            if (permision != false)
+            if (permision == false)
             {
                 return BadRequest("No tienes los permisos");
             }
-
-            if (!ModelState.IsValid)
+            else
             {
-                return BadRequest(ModelState);
-            }
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
 
-            People people = await _peopleService.CreatePeopleAsync(name, lnames, dtypeid, ndocument,
-                sex, date, utypeid, user, password, isdeleted);
-            return CreatedAtAction(nameof(GetPeopleById), new { id = people.PeopleId }, people);
+                People people = await _peopleService.CreatePeopleAsync(name, lnames, dtypeid, ndocument,
+                    sex, date, utypeid, user, password, isdeleted);
+                return CreatedAtAction(nameof(GetPeopleById), new { id = people.PeopleId }, people);
+            }            
         }
 
         [HttpPut("{id}")]
@@ -83,22 +85,29 @@ namespace SIMYTSoacha.Controllers
                 return NotFound();
             }
 
-            existingPeople.Names = name;
-            existingPeople.Lnames = lnames;
-            existingPeople.DtypeId = dtypeid;
-            existingPeople.DocumentType = null;
-            existingPeople.Ndocument = ndocument;
-            existingPeople.SexId = sex;
-            existingPeople.Sex = null;
-            existingPeople.DateBirth = date;
-            existingPeople.UserTypeId = utypeid;
-            existingPeople.UserType = null;
-            existingPeople.UserName = user;
-            existingPeople.Passcodes = password;
-            existingPeople.Isdeleted = isdeleted;
+            if (existingPeople.Passcodes != password)
+            {
+                return BadRequest("No se puede cambiar la clave consulta con tu administrador.");
+            }
+            else
+            {
+                existingPeople.Names = name;
+                existingPeople.Lnames = lnames;
+                existingPeople.DtypeId = dtypeid;
+                existingPeople.DocumentType = null;
+                existingPeople.Ndocument = ndocument;
+                existingPeople.SexId = sex;
+                existingPeople.Sex = null;
+                existingPeople.DateBirth = date;
+                existingPeople.UserTypeId = utypeid;
+                existingPeople.UserType = null;
+                existingPeople.UserName = user;
+                existingPeople.Passcodes = password;
+                existingPeople.Isdeleted = isdeleted;
 
-            await _peopleService.UpdatePeopleAsync(existingPeople);
-            return NoContent();
+                await _peopleService.UpdatePeopleAsync(existingPeople);
+                return NoContent();
+            }
         }
 
         [HttpDelete("{id}")]
