@@ -68,10 +68,14 @@ namespace SIMYTSoacha.Controllers
 
             existingDriver.Nlicense = LicenseNumber;
             existingDriver.EcenterId = ecenterid;
+            existingDriver.Ecenters = null;
             existingDriver.DateIssue = date;
             existingDriver.StateId = stateid;
+            existingDriver.Procedures = null;
             existingDriver.RestrictionId = restri;
+            existingDriver.Restrictions = null;
             existingDriver.ProcedureId = procedureid;
+            existingDriver.Procedures = null;
             existingDriver.Isdeleted = isdeleted;
             
             await _driverService.UpdateDriverAsync(existingDriver);

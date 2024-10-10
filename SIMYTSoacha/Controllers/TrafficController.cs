@@ -70,9 +70,13 @@ namespace SIMYTSoacha.Controllers
 
             existingTraffic.Plate = traffic.Plate;
             existingTraffic.VstatesId = traffic.VstatesId;
+            existingTraffic.States = null;
             existingTraffic.TserviceId = traffic.TserviceId;
+            existingTraffic.Services = null;
             existingTraffic.TvehicleId = traffic.TvehicleId;
+            existingTraffic.Vehicles = null;
             existingTraffic.ProcedureId = traffic.ProcedureId;
+            existingTraffic.Procedures = null;
             existingTraffic.Isdeleted = traffic.Isdeleted;
 
             await _trafficService.UpdateTrafficLicensesAsync(existingTraffic);

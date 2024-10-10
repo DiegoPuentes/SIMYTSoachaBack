@@ -9,8 +9,7 @@ namespace SIMYTSoacha.Services
         Task<People> GetPeopleByIdAsync(int id);
         Task<People> CreatePeopleAsync(string name, string lnames, int dtypeid, string ndocument,
             int sex, DateTime date, int utypeid, string user, string password, bool isdeleted);
-        Task UpdatePeopleAsync(string name, string lnames, int dtypeid, string ndocument, int sex, 
-            DateTime date, int utypeid, string user, string password, bool isdeleted);
+        Task UpdatePeopleAsync(People people);
         Task SoftDeletePeopleAsync(int id);
         Task<People> LoginAsync(string user, string pass);
         Task<bool> PermissionAsync(int id);
@@ -43,12 +42,9 @@ namespace SIMYTSoacha.Services
                 sex, date, utypeid, user, password, isdeleted);
         }
 
-        public async Task UpdatePeopleAsync(string name, string lnames, int dtypeid, 
-            string ndocument, int sex, DateTime date, int utypeid, string user, string password,
-            bool isdeleted)
+        public async Task UpdatePeopleAsync(People people)
         {
-            await _peopleRepository.UpdatePeopleAsync(name, lnames, dtypeid, ndocument, sex, date,
-                utypeid, user, password, isdeleted);
+            await _peopleRepository.UpdatePeopleAsync(people);
         }
 
         public async Task SoftDeletePeopleAsync(int id)

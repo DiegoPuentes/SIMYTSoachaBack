@@ -54,12 +54,9 @@ namespace SIMYTSoacha.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> UpdateDoc(int id, [FromBody] Contacts contact)
+        public async Task<IActionResult> UpdateDoc(int id, [FromBody] int TypeContactId, int PeopleId
+            , string contact, bool isdeleted)
         {
-            if (id != contact.ContactId)
-            {
-                return BadRequest("This contact does not modifie");
-            }
 
             var existingContact = await _contactService.GetContactByIdAsync(id);
             if (existingContact == null)
@@ -67,7 +64,14 @@ namespace SIMYTSoacha.Controllers
                 return NotFound("This contact has not been created");
             }
 
-            await _contactService.UpdateContactAsync(contact);
+            existingContact.TcontactId = TypeContactId;
+            existingContact.TypesContacts = null;
+            existingContact.PeopleId = PeopleId;
+            existingContact.People = null;
+            existingContact.Contact = contact;
+            existingContact.Isdeleted = isdeleted;
+
+            await _contactService.UpdateContactAsync(existingContact);
             return NoContent();
         }
 

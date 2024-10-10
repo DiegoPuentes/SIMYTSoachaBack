@@ -66,11 +66,15 @@ namespace SIMYTSoacha.Controllers
             }
 
             existingVehicles.BrandId = BrandId;
+            existingVehicles.Brand = null;
             existingVehicles.ColorId = ColorId;
+            existingVehicles.Color = null;
             existingVehicles.Nmotor = Nmotor;
             existingVehicles.PeopleId = PeopleId;
+            existingVehicles.People = null;
             existingVehicles.Echasis = Echasis;
             existingVehicles.MlineId = Mlineid;
+            existingVehicles.Models = null;
             existingVehicles.Isdeleted = isdeleted;
 
             await _vehicleService.UpdateVehicleAsync(existingVehicles);

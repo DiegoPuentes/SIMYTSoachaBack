@@ -83,8 +83,21 @@ namespace SIMYTSoacha.Controllers
                 return NotFound();
             }
 
-            await _peopleService.UpdatePeopleAsync(name, lnames, dtypeid, ndocument,
-                sex, date, utypeid, user, password, isdeleted);
+            existingPeople.Names = name;
+            existingPeople.Lnames = lnames;
+            existingPeople.DtypeId = dtypeid;
+            existingPeople.DocumentType = null;
+            existingPeople.Ndocument = ndocument;
+            existingPeople.SexId = sex;
+            existingPeople.Sex = null;
+            existingPeople.DateBirth = date;
+            existingPeople.UserTypeId = utypeid;
+            existingPeople.UserType = null;
+            existingPeople.UserName = user;
+            existingPeople.Passcodes = password;
+            existingPeople.Isdeleted = isdeleted;
+
+            await _peopleService.UpdatePeopleAsync(existingPeople);
             return NoContent();
         }
 

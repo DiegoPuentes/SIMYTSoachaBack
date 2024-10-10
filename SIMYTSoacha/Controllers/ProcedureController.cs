@@ -65,7 +65,9 @@ namespace SIMYTSoacha.Controllers
 
             existingProcedure.ProcedureId = procedure;
             existingProcedure.StateId = stateid;
+            existingProcedure.States = null;
             existingProcedure.RequestId = requestid;
+            existingProcedure.Requests = null;
             existingProcedure.Isdeleted = isdeleted;
 
             await _procedureService.UpdateProceduresAsync(existingProcedure);
