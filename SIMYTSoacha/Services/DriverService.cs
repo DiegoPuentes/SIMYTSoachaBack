@@ -16,10 +16,12 @@ namespace SIMYTSoacha.Services
     public class DriverService : IDriverService
     {
         private readonly IDriverRepository _driverRepository;
+        private readonly IPeopleRepository _peopleRepository;
 
-        public DriverService(IDriverRepository driverRepository)
+        public DriverService(IDriverRepository driverRepository, IPeopleRepository peopleRepository)
         {
             _driverRepository = driverRepository;
+            _peopleRepository = peopleRepository;
         }
 
         public Task<DriverLicenses> CreateDriverAsync(int nlicense, int Eid, DateTime date,

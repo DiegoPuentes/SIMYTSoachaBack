@@ -9,9 +9,11 @@ namespace SIMYTSoacha.Controllers
     public class BrandController : ControllerBase
     {
         private readonly IBrandService _brandService;
-        public BrandController(IBrandService brandService)
+        private readonly IPeopleService people;
+        public BrandController(IBrandService brandService, IPeopleService peopleService)
         {
             _brandService = brandService;
+            people = peopleService;
         }
 
         [HttpGet]
@@ -40,13 +42,13 @@ namespace SIMYTSoacha.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> CreateBrands([FromForm] Brands brands)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
 
-            await _brandService.CreateBrandsAsync(brands);
-            return CreatedAtAction(nameof(GetBrandById), new { id = brands.Id }, brands);
+                await _brandService.CreateBrandsAsync(brands);
+                return CreatedAtAction(nameof(GetBrandById), new { id = brands.Id }, brands);
         }
 
         [HttpPut("{id}")]

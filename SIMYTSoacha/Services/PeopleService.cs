@@ -12,7 +12,7 @@ namespace SIMYTSoacha.Services
         Task UpdatePeopleAsync(People people);
         Task SoftDeletePeopleAsync(int id);
         Task<People> LoginAsync(string user, string pass);
-        Task<bool> PermissionAsync(int id);
+        Task<bool> PermissionAsync(int id, int id2);
     }
 
     public class PeopleService : IPeopleService
@@ -54,12 +54,12 @@ namespace SIMYTSoacha.Services
 
         public async Task<People> LoginAsync(string user, string pass)
         {
-            return await _peopleRepository.LoginAsync(user, pass); 
+            return await _peopleRepository.LoginAsync(user, pass);
         }
 
-        public async Task<bool> PermissionAsync(int id)
+        public async Task<bool> PermissionAsync(int id, int id2)
         {
-            return await _peopleRepository.PermissionAsync(id);
+            return await _peopleRepository.PermissionAsync(id, id2);
         }
     }
 }

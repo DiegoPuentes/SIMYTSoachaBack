@@ -51,9 +51,7 @@ namespace SIMYTSoacha.Controllers
             int dtypeid, string ndocument, int sex, DateTime date, int utypeid, string user,
             string password, bool isdeleted)
         {
-            bool permision = await CheckUserPermission();
-
-            if (permision == false)
+            if (await CheckUserPermission(1))
             {
                 return BadRequest("No tienes los permisos");
             }
@@ -78,36 +76,44 @@ namespace SIMYTSoacha.Controllers
             int dtypeid, string ndocument, int sex, DateTime date, int utypeid, string user,
             string password, bool isdeleted)
         {
-
-            var existingPeople = await _peopleService.GetPeopleByIdAsync(id);
-            if (existingPeople == null)
+            if (await CheckUserPermission(3))
             {
-                return NotFound();
-            }
 
-            if (existingPeople.Passcodes != password)
-            {
-                return BadRequest("No se puede cambiar la clave consulta con tu administrador.");
+                var existingPeople = await _peopleService.GetPeopleByIdAsync(id);
+                if (existingPeople == null)
+                {
+                    return NotFound();
+                }
+
+                if (existingPeople.Passcodes != password)
+                {
+                    return BadRequest("No se puede cambiar la clave consulta con tu administrador.");
+                }
+                else
+                {
+                    existingPeople.Names = name;
+                    existingPeople.Lnames = lnames;
+                    existingPeople.DtypeId = dtypeid;
+                    existingPeople.DocumentType = null;
+                    existingPeople.Ndocument = ndocument;
+                    existingPeople.SexId = sex;
+                    existingPeople.Sex = null;
+                    existingPeople.DateBirth = date;
+                    existingPeople.UserTypeId = utypeid;
+                    existingPeople.UserType = null;
+                    existingPeople.UserName = user;
+                    existingPeople.Passcodes = password;
+                    existingPeople.Isdeleted = isdeleted;
+
+                    await _peopleService.UpdatePeopleAsync(existingPeople);
+                    return NoContent();
+                }
             }
             else
             {
-                existingPeople.Names = name;
-                existingPeople.Lnames = lnames;
-                existingPeople.DtypeId = dtypeid;
-                existingPeople.DocumentType = null;
-                existingPeople.Ndocument = ndocument;
-                existingPeople.SexId = sex;
-                existingPeople.Sex = null;
-                existingPeople.DateBirth = date;
-                existingPeople.UserTypeId = utypeid;
-                existingPeople.UserType = null;
-                existingPeople.UserName = user;
-                existingPeople.Passcodes = password;
-                existingPeople.Isdeleted = isdeleted;
-
-                await _peopleService.UpdatePeopleAsync(existingPeople);
-                return NoContent();
+                return BadRequest("No tienes el permiso para realizar esta acción");
             }
+
         }
 
         [HttpDelete("{id}")]
@@ -115,14 +121,22 @@ namespace SIMYTSoacha.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> SoftDeletePeople(int id)
         {
-            var people = await _peopleService.GetPeopleByIdAsync(id);
-            if (people == null)
+            if (await CheckUserPermission(2))
             {
-                return NotFound();
-            }
+                var people = await _peopleService.GetPeopleByIdAsync(id);
+                if (people == null)
+                {
+                    return NotFound();
+                }
 
-            await _peopleService.SoftDeletePeopleAsync(id);
-            return NoContent();
+                await _peopleService.SoftDeletePeopleAsync(id);
+                return NoContent();
+
+            }
+            else
+            {
+                return BadRequest("No tienes el permiso para realizar esta acción.");
+            }
         }
         
         [HttpPost("Login")]
@@ -154,9 +168,9 @@ namespace SIMYTSoacha.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<bool> CheckUserPermission()
+        public async Task<bool> CheckUserPermission(int id)
         {
-            bool hasPermission = await _peopleService.PermissionAsync(UserSession.UserTypeId);
+            bool hasPermission = await _peopleService.PermissionAsync(UserSession.UserTypeId, id);
 
             if (hasPermission)
             {

@@ -17,7 +17,7 @@ namespace SIMYTSoacha.Repositories
         Task UpdatePeopleAsync(People people);
         Task SoftDeletePeopleAsync(int id);
         Task<People> LoginAsync(string user, string pass);
-        Task<bool> PermissionAsync(int id);
+        Task<bool> PermissionAsync(int id, int id2);
     }
     public class PeopleRepository : IPeopleRepository
     {
@@ -90,6 +90,12 @@ namespace SIMYTSoacha.Repositories
             _context.People.Update(people);
             await _context.SaveChangesAsync();
         }
+        public async Task<bool> PermissionAsync(int id, int id2)
+        { 
+            return await _context.UsersXPermissions
+                .Where(s => s.UtypeId == id && s.PermissionId == id2 && !s.Isdeleted).AnyAsync();
+        }
+
         public static string Encrypt(string str)
         {
             using (SHA256 sha256Hash = SHA256.Create())
@@ -105,43 +111,7 @@ namespace SIMYTSoacha.Repositories
                 }
                 return builder.ToString();
             }
-            /*
-            byte[] key = Encoding.UTF8.GetBytes("lave_segura_32_bytes_de_largo_12345"); // Debe ser de 32 bytes
-            byte[] iv = Encoding.UTF8.GetBytes("tu_iv_de_16_byte"); // Debe ser de 16 bytes
 
-            using (Aes aes = Aes.Create())
-            {
-                aes.Key = key;
-                aes.IV = iv;
-                aes.Padding = PaddingMode.PKCS7;
-
-                ICryptoTransform decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
-
-                using (MemoryStream ms = new MemoryStream(Convert.FromBase64String(str)))
-                {
-                    using (CryptoStream cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read))
-                    {
-                        using (StreamReader sr = new StreamReader(cs))
-                        {
-                            return sr.ReadToEnd();
-                        }
-                    }
-                }
-            }
-            /*SHA256 sha256 = SHA256Managed.Create();
-            ASCIIEncoding encoding = new ASCIIEncoding();
-            byte[] data = null;
-            StringBuilder stringBuilder = new StringBuilder();
-            data = sha256.ComputeHash(encoding.GetBytes(str));
-            for (int i = 0; i < data.Length; i++) stringBuilder.AppendFormat("{0:x2", data[i]);
-            string encryptedPass = stringBuilder.ToString();
-            return encryptedPass;*/
-        }
-
-        public async Task<bool> PermissionAsync(int id)
-        { 
-            return await _context.UsersXPermissions
-                .Where(s => s.UtypeId == id && s.PermissionId == 1 && !s.Isdeleted).AnyAsync();
         }
     }
 }

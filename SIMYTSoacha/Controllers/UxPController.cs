@@ -25,14 +25,16 @@ namespace SIMYTSoacha.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> CreateUxP([FromForm] int id, int pid, bool isdeleted)
+        public async Task<ActionResult> CreateUxP([FromForm] int UserTypeId, int PermissionIid, 
+            bool isdeleted)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            UsersXPermissions user = await _uxPService.CreateUxPAsync(id, pid, isdeleted);
+            UsersXPermissions user = await _uxPService.CreateUxPAsync(UserTypeId, PermissionIid, 
+                isdeleted);
             return Created(nameof(CreateUxP), user);
         }
     }
