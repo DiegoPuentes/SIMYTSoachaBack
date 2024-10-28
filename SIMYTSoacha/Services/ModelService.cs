@@ -8,20 +8,35 @@ namespace SIMYTSoacha.Services
         Task<IEnumerable<Models>> GetAllModelsAsync();
         Task<Models> GetModelsByIdAsync(int id);
         Task UpdateModelAsync(Models model);
-        Task CreatModelAsync(Models model);
+        Task<bool> CreatModelAsync(Models model);
         Task SoftDeleteModelAsync(int id);
     }
     public class ModelService : IModelService
     {
         private readonly IModelRepository _model;
-        public ModelService(IModelRepository modelRepository)
+        private readonly IPeopleService _peopleService;
+        private readonly IHttpContextAccessor _contextAccessor;
+        public ModelService(IModelRepository modelRepository, IPeopleService peopleService
+            , IHttpContextAccessor contextAccessor)
         {
             _model = modelRepository;
+            _peopleService = peopleService;
+            _contextAccessor = contextAccessor;
         }
 
-        public Task CreatModelAsync(Models model)
+        public async Task<bool> CreatModelAsync(Models model)
         {
-            return _model.CreateModelAsync(model);
+            int? userType = _contextAccessor.HttpContext.Session.GetInt32("UserTypeId");
+            if (userType != null)
+            {
+                if (await _peopleService.PermissionAsync(userType.Value, 1))
+                {
+                    await _model.CreateModelAsync(model);
+                    return true;
+                }
+                return false;
+            }
+            return false;
         }
 
         public Task SoftDeleteModelAsync(int id)

@@ -9,9 +9,12 @@ namespace SIMYTSoacha.Controllers
     public class ImpositionsController : ControllerBase
     {
         private readonly IImpositionService _impositionService;
-        public ImpositionsController(IImpositionService impositionService)
+        private readonly IPeopleService _peopleService;
+        public ImpositionsController(IImpositionService impositionService,
+            IPeopleService peopleService)
         {
             _impositionService = impositionService;
+            _peopleService = peopleService;
         }
 
         [HttpGet]
@@ -45,9 +48,18 @@ namespace SIMYTSoacha.Controllers
                 return BadRequest(ModelState);
             }
 
-            await _impositionService.CreateMimpositionsAsync(mimpositions);
-            return CreatedAtAction(nameof(GetImpositionById), new { id = mimpositions.MimpositionId }
-            , mimpositions);
+            bool result = await _impositionService.CreateMimpositionsAsync(mimpositions);
+
+            if (result)
+            {
+
+                return CreatedAtAction(nameof(GetImpositionById), new { id = mimpositions.MimpositionId }
+                , mimpositions);
+            }
+            else
+            {
+                return BadRequest("No tienes permisos!");
+            }
         }
 
         [HttpPut("{id}")]
@@ -56,22 +68,39 @@ namespace SIMYTSoacha.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateImposition(int id, [FromForm] Mimpositions mimpositions)
         {
-            if (id != mimpositions.MimpositionId)
+            var userTypeId = HttpContext.Session.GetInt32("UserTypeId");
+
+            if (userTypeId == null)
             {
-                return BadRequest("ID does not exist");
+                return Unauthorized("Por favor, inicia sesión para continuar.");
             }
-
-            var existingImpo = await _impositionService.GetMimpositionsByIdAsync(id);
-            if (existingImpo == null)
+            else
             {
-                return NotFound();
+                bool result = await _peopleService.PermissionAsync(userTypeId.Value, 3);
+                if (result)
+                {
+                    if (id != mimpositions.MimpositionId)
+                    {
+                        return BadRequest("ID does not exist");
+                    }
+
+                    var existingImpo = await _impositionService.GetMimpositionsByIdAsync(id);
+                    if (existingImpo == null)
+                    {
+                        return NotFound();
+                    }
+
+                    existingImpo.MimpositionName = mimpositions.MimpositionName;
+                    existingImpo.Isdeleted = mimpositions.Isdeleted;
+
+                    await _impositionService.UpdateMimpositionAsync(existingImpo);
+                    return NoContent();
+                }
+                else
+                {
+                    return Unauthorized("No tiene el permiso, para poder actualizar registros.");
+                }
             }
-
-            existingImpo.MimpositionName = mimpositions.MimpositionName;
-            existingImpo.Isdeleted = mimpositions.Isdeleted;
-
-            await _impositionService.UpdateMimpositionAsync(existingImpo);
-            return NoContent();
         }
 
         [HttpDelete("{id}")]
@@ -79,12 +108,29 @@ namespace SIMYTSoacha.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> SoftDeleteImposition(int id)
         {
-            var impo = await _impositionService.GetMimpositionsByIdAsync(id);
-            if (impo == null)
-                return NotFound();
+            var userTypeId = HttpContext.Session.GetInt32("UserTypeId");
 
-            await _impositionService.SoftDeleteMimpositionsAsync(id);
-            return NoContent();
+            if (userTypeId == null)
+            {
+                return Unauthorized("Por favor, inicia sesión para continuar.");
+            }
+            else
+            {
+                bool result = await _peopleService.PermissionAsync(userTypeId.Value, 2);
+                if (result)
+                { 
+                    var impo = await _impositionService.GetMimpositionsByIdAsync(id);
+                    if (impo == null)
+                        return NotFound();
+
+                    await _impositionService.SoftDeleteMimpositionsAsync(id);
+                    return NoContent();
+                }
+                else
+                {
+                    return Unauthorized("No tiene el permiso, para poder eliminar registros.");
+                }
+            }
         }
     }
 }

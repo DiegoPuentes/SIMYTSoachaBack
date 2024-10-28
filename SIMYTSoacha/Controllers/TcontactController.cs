@@ -9,9 +9,11 @@ namespace SIMYTSoacha.Controllers
     public class TcontactController : ControllerBase
     {
         private readonly ITcontactService _tcontactService;
-        public TcontactController(ITcontactService tcontactService)
+        private readonly IPeopleService _peopleService;
+        public TcontactController(ITcontactService tcontactService, IPeopleService peopleService)
         {
             _tcontactService = tcontactService;
+            _peopleService = peopleService;
         }
 
         [HttpGet]
@@ -45,9 +47,17 @@ namespace SIMYTSoacha.Controllers
                 return BadRequest(ModelState);
             }
 
-            await _tcontactService.CreateTcontactAsync(typesContacts);
-            return CreatedAtAction(nameof(GetTcontactById), new { id = typesContacts.TcontactId },
+            bool result = await _tcontactService.CreateTcontactAsync(typesContacts);
+
+            if (result)
+            {
+                return CreatedAtAction(nameof(GetTcontactById), new { id = typesContacts.TcontactId },
                 typesContacts);
+            }
+            else
+            {
+                return BadRequest("No tienes permisos!");
+            }
         }
 
         [HttpPut("{id}")]
@@ -56,22 +66,39 @@ namespace SIMYTSoacha.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateTcontact(int id, [FromForm] TypesContacts typesContacts)
         {
-            if (id != typesContacts.TcontactId)
+            var userTypeId = HttpContext.Session.GetInt32("UserTypeId");
+
+            if (userTypeId == null)
             {
-                return BadRequest("ID does not exist");
+                return Unauthorized("Por favor, inicia sesión para continuar.");
             }
-
-            var existingTcontact = await _tcontactService.GetTcontactByIdAsync(id);
-            if (existingTcontact == null)
+            else
             {
-                return NotFound();
+                bool result = await _peopleService.PermissionAsync(userTypeId.Value, 3);
+                if (result)
+                {
+                    if (id != typesContacts.TcontactId)
+                    {
+                        return BadRequest("ID does not exist");
+                    }
+
+                    var existingTcontact = await _tcontactService.GetTcontactByIdAsync(id);
+                    if (existingTcontact == null)
+                    {
+                        return NotFound();
+                    }
+
+                    existingTcontact.Dtype = typesContacts.Dtype;
+                    existingTcontact.Isdeleted = typesContacts.Isdeleted;
+
+                    await _tcontactService.UpdateTcontactAsync(existingTcontact);
+                    return NoContent();
+                }
+                else
+                {
+                    return Unauthorized("No tiene el permiso, para poder actualizar registros.");
+                }
             }
-
-            existingTcontact.Dtype = typesContacts.Dtype;
-            existingTcontact.Isdeleted = typesContacts.Isdeleted;
-
-            await _tcontactService.UpdateTcontactAsync(existingTcontact);
-            return NoContent();
         }
 
         [HttpDelete("{id}")]
@@ -79,12 +106,29 @@ namespace SIMYTSoacha.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> SoftDeleteTcontact(int id)
         {
-            var Tcontact = await _tcontactService.GetTcontactByIdAsync(id);
-            if (Tcontact == null)
-                return NotFound();
+            var userTypeId = HttpContext.Session.GetInt32("UserTypeId");
 
-            await _tcontactService.SoftDeleteTcontactAsync(id);
-            return NoContent();
+            if (userTypeId == null)
+            {
+                return Unauthorized("Por favor, inicia sesión para continuar.");
+            }
+            else
+            {
+                bool result = await _peopleService.PermissionAsync(userTypeId.Value, 2);
+                if (result)
+                {
+                    var Tcontact = await _tcontactService.GetTcontactByIdAsync(id);
+                    if (Tcontact == null)
+                        return NotFound();
+
+                    await _tcontactService.SoftDeleteTcontactAsync(id);
+                    return NoContent();
+                }
+                else
+                {
+                    return Unauthorized("No tiene el permiso, para poder eliminar registros.");
+                }
+            }
         }
     }
 }

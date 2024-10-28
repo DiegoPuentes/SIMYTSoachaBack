@@ -9,9 +9,11 @@ namespace SIMYTSoacha.Controllers
     public class LineController : ControllerBase
     {
         private readonly ILineService _lineService;
-        public LineController(ILineService lineService)
+        private readonly IPeopleService _peopleService;
+        public LineController(ILineService lineService, IPeopleService peopleService)
         {
             _lineService = lineService;
+            _peopleService = peopleService;
         }
 
         [HttpGet]
@@ -45,8 +47,16 @@ namespace SIMYTSoacha.Controllers
                 return BadRequest(ModelState);
             }
 
-            await _lineService.CreateLinesAsync(lines);
-            return CreatedAtAction(nameof(GetLineById), new { id = lines.Id }, lines);
+            bool result = await _lineService.CreateLinesAsync(lines);
+
+            if (result)
+            {
+                return CreatedAtAction(nameof(GetLineById), new { id = lines.Id }, lines);
+            }
+            else
+            {
+                return BadRequest("No tienes permisos!");
+            }
         }
 
         [HttpPut("{id}")]
@@ -55,22 +65,40 @@ namespace SIMYTSoacha.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateLines(int id, [FromForm] Lines lines)
         {
-            if (id != lines.Id)
+            var userTypeId = HttpContext.Session.GetInt32("UserTypeId");
+
+            if (userTypeId == null)
             {
-                return BadRequest("ID does not exist");
+                return Unauthorized("Por favor, inicia sesión para continuar.");
             }
-
-            var existingLines = await _lineService.GetLinesByIdAsync(id);
-            if (existingLines == null)
+            else
             {
-                return NotFound();
+                bool result = await _peopleService.PermissionAsync(userTypeId.Value, 3);
+                if (result)
+                {
+
+                    if (id != lines.Id)
+                    {
+                        return BadRequest("ID does not exist");
+                    }
+
+                    var existingLines = await _lineService.GetLinesByIdAsync(id);
+                    if (existingLines == null)
+                    {
+                        return NotFound();
+                    }
+
+                    existingLines.Nline = lines.Nline;
+                    existingLines.Isdeleted = lines.Isdeleted;
+
+                    await _lineService.UpdateLinesAsync(existingLines);
+                    return NoContent();
+                }
+                else
+                {
+                    return Unauthorized("No tiene el permiso, para poder actualizar registros.");
+                }
             }
-
-            existingLines.Nline = lines.Nline;
-            existingLines.Isdeleted = lines.Isdeleted;
-
-            await _lineService.UpdateLinesAsync(existingLines);
-            return NoContent();
         }
 
         [HttpDelete("{id}")]
@@ -78,12 +106,29 @@ namespace SIMYTSoacha.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> SoftDeleteLines(int id)
         {
-            var lines = await _lineService.GetLinesByIdAsync(id);
-            if (lines == null)
-                return NotFound();
+            var userTypeId = HttpContext.Session.GetInt32("UserTypeId");
 
-            await _lineService.SoftDeleteLinesAsync(id);
-            return NoContent();
+            if (userTypeId == null)
+            {
+                return Unauthorized("Por favor, inicia sesión para continuar.");
+            }
+            else
+            {
+                bool result = await _peopleService.PermissionAsync(userTypeId.Value, 2);
+                if (result)
+                {
+                    var lines = await _lineService.GetLinesByIdAsync(id);
+                    if (lines == null)
+                        return NotFound();
+
+                    await _lineService.SoftDeleteLinesAsync(id);
+                    return NoContent();
+                }
+                else
+                {
+                    return Unauthorized("No tiene el permiso, para poder eliminar registros.");
+                }
+            }
         }
     }
 }

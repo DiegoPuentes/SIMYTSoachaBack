@@ -7,7 +7,7 @@ namespace SIMYTSoacha.Services
     {
         Task<IEnumerable<Contacts>> GetAllContactAsync();
         Task<Contacts> GetContactByIdAsync(int id);
-        Task CreateContactAsync(Contacts contact);
+        Task<bool> CreateContactAsync(Contacts contact);
         Task UpdateContactAsync(Contacts contact);
         Task SoftDeleteContactAsync(int id);
     }
@@ -15,10 +15,15 @@ namespace SIMYTSoacha.Services
     public class ContactService : IContactService
     {
         private readonly IContactRepository _contRepository;
+        private readonly IPeopleService _peopleService;
+        private readonly IHttpContextAccessor _contextAccessor;
 
-        public ContactService(IContactRepository conRepository)
+        public ContactService(IContactRepository conRepository, IPeopleService peopleService,
+            IHttpContextAccessor httpContextAccessor)
         {
             _contRepository = conRepository;
+            _peopleService = peopleService;
+            _contextAccessor = httpContextAccessor;
         }
 
         public async Task<IEnumerable<Contacts>> GetAllContactAsync()
@@ -31,9 +36,19 @@ namespace SIMYTSoacha.Services
             return await _contRepository.GetContactByIdAsync(id);
         }
 
-        public async Task CreateContactAsync(Contacts doc)
+        public async Task<bool> CreateContactAsync(Contacts doc)
         {
-            await _contRepository.CreateContactAsync(doc);
+            int? userType = _contextAccessor.HttpContext.Session.GetInt32("UserTypeId");
+            if (userType != null)
+            {
+                if (await _peopleService.PermissionAsync(userType.Value, 1))
+                {
+                    await _contRepository.CreateContactAsync(doc);
+                    return true;
+                }
+                return false;
+            }
+            return false;
         }
 
         public async Task UpdateContactAsync(Contacts doc)

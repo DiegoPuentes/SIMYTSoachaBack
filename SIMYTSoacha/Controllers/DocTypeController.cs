@@ -9,10 +9,11 @@ namespace SIMYTSoacha.Controllers
     public class DocTypeController : ControllerBase
     {
         private readonly IDocService _docTypeService;
-
-        public DocTypeController(IDocService docTypeService)
+        private readonly IPeopleService _peopleService;
+        public DocTypeController(IDocService docTypeService, IPeopleService peopleService)
         {
             _docTypeService = docTypeService;
+            _peopleService = peopleService;
         }
 
         [HttpGet]
@@ -46,8 +47,16 @@ namespace SIMYTSoacha.Controllers
                 return BadRequest(ModelState);
             }
 
-            await _docTypeService.CreateDocAsync(doc);
-            return CreatedAtAction(nameof(GetDocById), new { id = doc.DtypesId }, doc);
+            bool result = await _docTypeService.CreateDocAsync(doc);
+
+            if (result)
+            {
+                return CreatedAtAction(nameof(GetDocById), new { id = doc.DtypesId }, doc);
+            }
+            else
+            {
+                return BadRequest("No tienes permisos!");
+            }
         }
 
         [HttpPut("{id}")]
@@ -56,22 +65,39 @@ namespace SIMYTSoacha.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateDoc(int id, [FromForm] DocumentsTypes doc)
         {
-            if (id != doc.DtypesId)
+            var userTypeId = HttpContext.Session.GetInt32("UserTypeId");
+
+            if (userTypeId == null)
             {
-                return BadRequest("This Doc does not modifie");
+                return Unauthorized("Por favor, inicia sesión para continuar.");
             }
-
-            var existingDoc = await _docTypeService.GetDocByIdAsync(id);
-            if (existingDoc == null)
+            else
             {
-                return NotFound("This Doc has not been created");
+                bool result = await _peopleService.PermissionAsync(userTypeId.Value, 3);
+                if (result)
+                {
+                    if (id != doc.DtypesId)
+                    {
+                        return BadRequest("This Doc does not modifie");
+                    }
+
+                    var existingDoc = await _docTypeService.GetDocByIdAsync(id);
+                    if (existingDoc == null)
+                    {
+                        return NotFound("This Doc has not been created");
+                    }
+
+                    existingDoc.Dtype = doc.Dtype;
+                    existingDoc.Isdeleted = doc.Isdeleted;
+
+                    await _docTypeService.UpdateDocAsync(existingDoc);
+                    return NoContent();
+                }
+                else
+                {
+                    return Unauthorized("No tiene el permiso, para poder actualizar registros.");
+                }
             }
-
-            existingDoc.Dtype = doc.Dtype;
-            existingDoc.Isdeleted = doc.Isdeleted;
-
-            await _docTypeService.UpdateDocAsync(existingDoc);
-            return NoContent();
         }
 
         [HttpDelete("{id}")]
@@ -79,12 +105,29 @@ namespace SIMYTSoacha.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> SoftDeleteDoc(int id)
         {
-            var people = await _docTypeService.GetDocByIdAsync(id);
-            if (people == null)
-                return NotFound();
+            var userTypeId = HttpContext.Session.GetInt32("UserTypeId");
 
-            await _docTypeService.SoftDeleteDoctAsync(id);
-            return NoContent();
+            if (userTypeId == null)
+            {
+                return Unauthorized("Por favor, inicia sesión para continuar.");
+            }
+            else
+            {
+                bool result = await _peopleService.PermissionAsync(userTypeId.Value, 2);
+                if (result)
+                {
+                    var people = await _docTypeService.GetDocByIdAsync(id);
+                    if (people == null)
+                        return NotFound();
+
+                    await _docTypeService.SoftDeleteDoctAsync(id);
+                    return NoContent();
+                }
+                else
+                {
+                    return Unauthorized("No tiene el permiso, para poder eliminar registros.");
+                }
+            }
         }
     }
 }

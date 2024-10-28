@@ -7,21 +7,36 @@ namespace SIMYTSoacha.Services
     {
         Task<IEnumerable<States>> GetAllStatesAsync();
         Task<States> GetStatesByIdAsync(int id);
-        Task CreateStateAsync(States states);
+        Task<bool> CreateStateAsync(States states);
         Task UpdateStateAsync(States states);
         Task SoftDeleteStateAsync(int id);
     }
     public class StateService : IStateService
     {
         private readonly IStateRepository _stateRepository;
-        public StateService(IStateRepository state)
+        private readonly IPeopleService _peopleService;
+        private readonly IHttpContextAccessor _contextAccessor;
+        public StateService(IStateRepository state, 
+            IPeopleService peopleService, IHttpContextAccessor contextAccessor)
         {
             _stateRepository = state;
+            _peopleService = peopleService;
+            _contextAccessor = contextAccessor;
         }
 
-        public Task CreateStateAsync(States states)
+        public async Task<bool> CreateStateAsync(States states)
         {
-            return _stateRepository.CreateStateAsync(states);
+            int? userType = _contextAccessor.HttpContext.Session.GetInt32("UserTypeId");
+            if (userType != null)
+            {
+                if (await _peopleService.PermissionAsync(userType.Value, 1))
+                {
+                    await _stateRepository.CreateStateAsync(states);
+                    return true;
+                }
+                return false;
+            }
+            return false;
         }
 
         public Task<IEnumerable<States>> GetAllStatesAsync()

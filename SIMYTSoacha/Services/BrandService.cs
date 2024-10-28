@@ -7,7 +7,7 @@ namespace SIMYTSoacha.Services
     {
         Task<IEnumerable<Brands>> GetAllBrandsAsync();
         Task<Brands> GetBrandsByIdAsync(int id);
-        Task CreateBrandsAsync(Brands brand);
+        Task<bool> CreateBrandsAsync(Brands brand);
         Task UpdateBrandsAsync(Brands brand);
         Task SoftDeleteBrandsAsync(int id); 
     }
@@ -15,14 +15,29 @@ namespace SIMYTSoacha.Services
     public class BrandService : IBrandService
     {
         private readonly IBrandRepository _brandRepository;
-        public BrandService(IBrandRepository brandRepository)
+        private readonly IPeopleService _peopleService;
+        private readonly IHttpContextAccessor _contextAccessor;
+        public BrandService(IBrandRepository brandRepository, IPeopleService peopleService,
+            IHttpContextAccessor contextAccessor)
         {
             _brandRepository = brandRepository;
+            _peopleService = peopleService;
+            _contextAccessor = contextAccessor;
         }
 
-        public Task CreateBrandsAsync(Brands brand)
+        public async Task<bool> CreateBrandsAsync(Brands brand)
         {
-            return _brandRepository.CreateBrandsAsync(brand);
+            int? userType = _contextAccessor.HttpContext.Session.GetInt32("UserTypeId");
+            if (userType!=null)
+            {
+                if (await _peopleService.PermissionAsync(userType.Value, 1))
+                {
+                    await _brandRepository.CreateBrandsAsync(brand);
+                    return true;
+                }
+                return false;
+            }
+            return false;
         }
 
         public Task<IEnumerable<Brands>> GetAllBrandsAsync()
@@ -43,6 +58,7 @@ namespace SIMYTSoacha.Services
         public Task UpdateBrandsAsync(Brands brand)
         {
             return _brandRepository.UpdateBrandsAsync(brand);
+                   
         }
-    } 
+    }
 }

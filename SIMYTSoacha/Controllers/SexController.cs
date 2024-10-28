@@ -10,9 +10,11 @@ namespace SIMYTSoacha.Controllers
     public class SexController : ControllerBase
     {
         private readonly ISexService _exService;
-        public SexController(ISexService sexService)
+        private readonly IPeopleService _peopleService;
+        public SexController(ISexService sexService, IPeopleService peopleService)
         {
             _exService = sexService;
+            _peopleService = peopleService;
         }
 
         [HttpGet]
@@ -46,8 +48,16 @@ namespace SIMYTSoacha.Controllers
                 return BadRequest(ModelState);
             }
 
-            await _exService.CreateSexAsync(sex);
-            return CreatedAtAction(nameof(GetSexById), new { id = sex.Id }, sex);
+            bool result = await _exService.CreateSexAsync(sex);
+
+            if (result)
+            {
+                return CreatedAtAction(nameof(GetSexById), new { id = sex.Id }, sex); 
+            }
+            else
+            {
+                return BadRequest("No tienes permisos!");
+            }
         }
 
         [HttpPut("{id}")]
@@ -56,22 +66,40 @@ namespace SIMYTSoacha.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateSex(int id, [FromForm] Sex sex)
         {
-            if (id != sex.Id)
+            var userTypeId = HttpContext.Session.GetInt32("UserTypeId");
+
+            if (userTypeId == null)
             {
-                return BadRequest("ID does not exist");
+                return Unauthorized("Por favor, inicia sesión para continuar.");
             }
-
-            var existingSex = await _exService.GetSexByIdAsync(id);
-            if (existingSex == null)
+            else
             {
-                return NotFound();
+                bool result = await _peopleService.PermissionAsync(userTypeId.Value, 3);
+                if (result)
+                {
+
+                    if (id != sex.Id)
+                    {
+                        return BadRequest("ID does not exist");
+                    }
+
+                    var existingSex = await _exService.GetSexByIdAsync(id);
+                    if (existingSex == null)
+                    {
+                        return NotFound();
+                    }
+
+                    existingSex.PreferredSex = sex.PreferredSex;
+                    existingSex.IsDeleted = sex.IsDeleted;
+
+                    await _exService.UpdateSexAsync(existingSex);
+                    return NoContent();
+                }
+                else
+                {
+                    return Unauthorized("No tiene el permiso, para poder actualizar registros.");
+                }
             }
-
-            existingSex.PreferredSex = sex.PreferredSex;
-            existingSex.IsDeleted = sex.IsDeleted;
-
-            await _exService.UpdateSexAsync(existingSex);
-            return NoContent();
         }
 
         [HttpDelete("{id}")]
@@ -79,12 +107,29 @@ namespace SIMYTSoacha.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> SoftDeleteSex(int id)
         {
-            var sex = await _exService.GetSexByIdAsync(id);
-            if (sex == null)
-                return NotFound();
+            var userTypeId = HttpContext.Session.GetInt32("UserTypeId");
 
-            await _exService.DeleteSexByIdAsync(id);
-            return NoContent();
+            if (userTypeId == null)
+            {
+                return Unauthorized("Por favor, inicia sesión para continuar.");
+            }
+            else
+            {
+                bool result = await _peopleService.PermissionAsync(userTypeId.Value, 2);
+                if (result)
+                {
+                    var sex = await _exService.GetSexByIdAsync(id);
+                    if (sex == null)
+                        return NotFound();
+
+                    await _exService.DeleteSexByIdAsync(id);
+                    return NoContent();
+                }
+                else
+                {
+                    return Unauthorized("No tiene el permiso, para poder eliminar registros.");
+                }
+            }
         }
     }
 }

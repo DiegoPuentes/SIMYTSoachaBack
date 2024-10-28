@@ -7,21 +7,36 @@ namespace SIMYTSoacha.Services
     {
         Task<IEnumerable<Lines>> GetAllLinesAsync();
         Task<Lines> GetLinesByIdAsync(int id);
-        Task CreateLinesAsync(Lines lines);
+        Task<bool> CreateLinesAsync(Lines lines);
         Task UpdateLinesAsync(Lines lines);
         Task SoftDeleteLinesAsync(int id);
     }
     public class LineService : ILineService
     {
         private readonly ILineRepository _lineRepository;
-        public LineService(ILineRepository lineRepository) 
+        private readonly IPeopleService _peopleService;
+        private readonly IHttpContextAccessor _contextAccessor;
+        public LineService(ILineRepository lineRepository, IPeopleService peopleService,
+            IHttpContextAccessor httpContextAccessor) 
         {
             _lineRepository = lineRepository;
+            _peopleService = peopleService;
+            _contextAccessor = httpContextAccessor;
         }
 
-        public Task CreateLinesAsync(Lines lines)
+        public async Task<bool> CreateLinesAsync(Lines lines)
         {
-            return _lineRepository.CreateLinesAsync(lines);
+            int? userType = _contextAccessor.HttpContext.Session.GetInt32("UserTypeId");
+            if (userType != null)
+            {
+                if (await _peopleService.PermissionAsync(userType.Value, 1))
+                {
+                    await _lineRepository.CreateLinesAsync(lines); ;
+                    return true;
+                }
+                return false;
+            }
+            return false;
         }
 
         public Task SoftDeleteLinesAsync(int id)

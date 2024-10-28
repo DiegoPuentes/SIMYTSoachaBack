@@ -7,7 +7,7 @@ namespace SIMYTSoacha.Services
     {
         Task<IEnumerable<Colors>> GetAllColorAsync();
         Task<Colors> GetColorByIdAsync(int id);
-        Task CreateColorAsync(Colors colors);
+        Task<bool> CreateColorAsync(Colors colors);
         Task UpdateColorAsync(Colors colors);
         Task SoftDeleteColorAsync(int id);
     }
@@ -15,14 +15,29 @@ namespace SIMYTSoacha.Services
     public class ColorService : IColorService
     {
         private readonly IColorRepository _colorRepository;
-        public ColorService(IColorRepository colorRepository)
+        private readonly IPeopleService _peopleService;
+        private readonly IHttpContextAccessor _contextAccessor;
+        public ColorService(IColorRepository colorRepository, IPeopleService peopleService
+            , IHttpContextAccessor httpContextAccessor)
         {
             _colorRepository = colorRepository;
+            _peopleService = peopleService;
+            _contextAccessor = httpContextAccessor;
         }
 
-        public Task CreateColorAsync(Colors colors)
+        public async Task<bool> CreateColorAsync(Colors colors)
         {
-            return _colorRepository.CreateColorAsync(colors);
+            int? userType = _contextAccessor.HttpContext.Session.GetInt32("UserTypeId");
+            if (userType != null)
+            {
+                if (await _peopleService.PermissionAsync(userType.Value, 1))
+                {
+                    await _colorRepository.CreateColorAsync(colors);
+                    return true;
+                }
+                return false;
+            }
+            return false;
         }
 
         public Task<IEnumerable<Colors>> GetAllColorAsync()

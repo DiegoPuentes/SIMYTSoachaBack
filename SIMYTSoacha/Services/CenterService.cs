@@ -7,7 +7,7 @@ namespace SIMYTSoacha.Services
     {
         Task<IEnumerable<Ecenters>> GetAllCenterAsync();
         Task<Ecenters> GetCenterByIdAsync(int id);
-        Task CreateCenterAsync(Ecenters ecenters);
+        Task<bool> CreateCenterAsync(Ecenters ecenters);
         Task UpdateCenterAsync(Ecenters ecenters);
         Task SoftDeleteCenterAsync(int id);
     }
@@ -15,14 +15,29 @@ namespace SIMYTSoacha.Services
     public class CenterService : ICenterService
     {
         private readonly ICenterRepository _centerRepository;
-        public CenterService(ICenterRepository centerRepository)
+        private readonly IPeopleService _peopleService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public CenterService(ICenterRepository centerRepository,
+            IPeopleService peopleService, IHttpContextAccessor httpContextAccessor)
         {
             _centerRepository = centerRepository;
+            _peopleService = peopleService;
+            _httpContextAccessor = httpContextAccessor;
         }
 
-        public Task CreateCenterAsync(Ecenters ecenters)
+        public async Task<bool> CreateCenterAsync(Ecenters ecenters)
         {
-            return _centerRepository.CreateCenterAsync(ecenters);
+            int? userType = _httpContextAccessor.HttpContext.Session.GetInt32("UserTypeId");
+            if (userType != null)
+            {
+                if (await _peopleService.PermissionAsync(userType.Value, 1))
+                {
+                    await _centerRepository.CreateCenterAsync(ecenters);
+                    return true;
+                }
+                return false;
+            }
+            return false;
         }
 
         public Task<IEnumerable<Ecenters>> GetAllCenterAsync()

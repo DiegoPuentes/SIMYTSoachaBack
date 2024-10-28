@@ -9,9 +9,11 @@ namespace SIMYTSoacha.Controllers
     public class DriverController : ControllerBase
     {
         private readonly IDriverService _driverService;
-        public DriverController(IDriverService driverService)
+        private readonly IPeopleService _peopleService;
+        public DriverController(IDriverService driverService, IPeopleService peopleService)
         {
-            _driverService = driverService; 
+            _driverService = driverService;
+            _peopleService = peopleService;
         }
 
         [HttpGet]
@@ -46,9 +48,23 @@ namespace SIMYTSoacha.Controllers
                 return BadRequest(ModelState);
             }
 
-            DriverLicenses driver = await _driverService.CreateDriverAsync(nlicense, Eid, date, 
-                Sid, Rid, Pid, isdeleted);
-            return CreatedAtAction(nameof(GetDriverById), new { id = driver.Id }, driver);
+            var userTypeId = HttpContext.Session.GetInt32("UserTypeId");
+
+            if (userTypeId == null)
+            {
+                return Unauthorized("Por favor, inicia sesión para continuar.");
+            }
+
+            if (await _peopleService.PermissionAsync(userTypeId.Value, 1))
+            {
+                DriverLicenses driver = await _driverService.CreateDriverAsync(nlicense, Eid, date, Sid, Rid, Pid, isdeleted);
+                return CreatedAtAction(nameof(GetDriverById), new { id = driver.Id }, driver);
+            }
+            else
+            {
+                return BadRequest("No tienes permisos!");
+            }
+
         }
 
         [HttpPut("{id}")]
@@ -58,28 +74,43 @@ namespace SIMYTSoacha.Controllers
         public async Task<IActionResult> UpdateDriver(int id, [FromForm] int LicenseNumber, int ecenterid,
             DateTime date, int stateid, int restri, int procedureid, bool isdeleted)
         {
-            
+            var userTypeId = HttpContext.Session.GetInt32("UserTypeId");
 
-            var existingDriver = await _driverService.GetDriverByIdAsync(id);
-            if (existingDriver == null)
+            if (userTypeId == null)
             {
-                return NotFound();
+                return Unauthorized("Por favor, inicia sesión para continuar.");
             }
+            else
+            {
+                bool result = await _peopleService.PermissionAsync(userTypeId.Value, 3);
+                if (result)
+                {
+                    var existingDriver = await _driverService.GetDriverByIdAsync(id);
+                    if (existingDriver == null)
+                    {
+                        return NotFound();
+                    }
 
-            existingDriver.Nlicense = LicenseNumber;
-            existingDriver.EcenterId = ecenterid;
-            existingDriver.Ecenters = null;
-            existingDriver.DateIssue = date;
-            existingDriver.StateId = stateid;
-            existingDriver.Procedures = null;
-            existingDriver.RestrictionId = restri;
-            existingDriver.Restrictions = null;
-            existingDriver.ProcedureId = procedureid;
-            existingDriver.Procedures = null;
-            existingDriver.Isdeleted = isdeleted;
-            
-            await _driverService.UpdateDriverAsync(existingDriver);
-            return NoContent();
+                    existingDriver.Nlicense = LicenseNumber;
+                    existingDriver.EcenterId = ecenterid;
+                    existingDriver.Ecenters = null;
+                    existingDriver.DateIssue = date;
+                    existingDriver.StateId = stateid;
+                    existingDriver.Procedures = null;
+                    existingDriver.RestrictionId = restri;
+                    existingDriver.Restrictions = null;
+                    existingDriver.ProcedureId = procedureid;
+                    existingDriver.Procedures = null;
+                    existingDriver.Isdeleted = isdeleted;
+
+                    await _driverService.UpdateDriverAsync(existingDriver);
+                    return NoContent();
+                }
+                else
+                {
+                    return Unauthorized("No tiene el permiso, para poder actualizar registros.");
+                }
+            }
         }
 
         [HttpDelete("{id}")]
@@ -87,12 +118,29 @@ namespace SIMYTSoacha.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> SoftDeleteDriver(int id)
         {
-            var driver = await _driverService.GetDriverByIdAsync(id);
-            if (driver == null)
-                return NotFound();
+            var userTypeId = HttpContext.Session.GetInt32("UserTypeId");
 
-            await _driverService.SoftDeleteDriverAsync(id);
-            return NoContent();
+            if (userTypeId == null)
+            {
+                return Unauthorized("Por favor, inicia sesión para continuar.");
+            }
+            else
+            {
+                bool result = await _peopleService.PermissionAsync(userTypeId.Value, 2);
+                if (result)
+                {
+                    var driver = await _driverService.GetDriverByIdAsync(id);
+                    if (driver == null)
+                        return NotFound();
+
+                    await _driverService.SoftDeleteDriverAsync(id);
+                    return NoContent();
+                }
+                else
+                {
+                    return Unauthorized("No tiene el permiso, para poder eliminar registros.");
+                }
+            }
         }
     }
 }

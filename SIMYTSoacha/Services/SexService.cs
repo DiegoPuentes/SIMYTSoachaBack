@@ -7,21 +7,36 @@ namespace SIMYTSoacha.Services
     {
         Task<IEnumerable<Sex>> GetAllSexAsync();
         Task<Sex> GetSexByIdAsync(int id);
-        Task CreateSexAsync(Sex sex);
+        Task<bool> CreateSexAsync(Sex sex);
         Task UpdateSexAsync(Sex sex);
         Task DeleteSexByIdAsync(int id);
     }
     public class SexService : ISexService
     {
         private readonly ISexRepository _repository;
-        public SexService(ISexRepository sexRepository)
+        private readonly IPeopleService _peopleService;
+        private readonly IHttpContextAccessor _contextAccessor;
+        public SexService(ISexRepository sexRepository, 
+            IPeopleService peopleService, IHttpContextAccessor contextAccessor)
         {
             _repository = sexRepository;
+            _peopleService = peopleService;
+            _contextAccessor = contextAccessor;
         }
 
-        public Task CreateSexAsync(Sex sex)
+        public async Task<bool> CreateSexAsync(Sex sex)
         {
-            return _repository.CreateSexAsync(sex);
+            int? userType = _contextAccessor.HttpContext.Session.GetInt32("UserTypeId");
+            if (userType != null)
+            {
+                if (await _peopleService.PermissionAsync(userType.Value, 1))
+                {
+                    await _repository.CreateSexAsync(sex); 
+                    return true;
+                }
+                return false;
+            }
+            return false;
         }
 
         public Task DeleteSexByIdAsync(int id)

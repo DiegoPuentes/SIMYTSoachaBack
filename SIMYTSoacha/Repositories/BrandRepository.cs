@@ -1,6 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SIMYTSoacha.Context;
 using SIMYTSoacha.Model;
+using SIMYTSoacha.Services;
 
 namespace SIMYTSoacha.Repositories
 {
@@ -15,16 +17,20 @@ namespace SIMYTSoacha.Repositories
     public class BrandRepository : IBrandRepository
     {
         public readonly SimytDbContext context;
-        public BrandRepository(SimytDbContext simytDbContext)
+        private readonly IPeopleService _peopleService;
+        private readonly IHttpContextAccessor _contextAccessor;
+        public BrandRepository(SimytDbContext simytDbContext, IPeopleService people,
+            IHttpContextAccessor httpContext)
         {
             context = simytDbContext;
+            _peopleService = people;
+            _contextAccessor = httpContext;
         }
         public async Task CreateBrandsAsync(Brands brand)
         {
             context.Brands.Add(brand);
             await context.SaveChangesAsync();
         }
-
         public async Task<IEnumerable<Brands>> GetAllBrandsAsync()
         {
             return await context.Brands

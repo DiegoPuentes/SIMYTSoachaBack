@@ -63,6 +63,7 @@ namespace SIMYTSoacha.Repositories
         public async Task<People> GetSubjectByIdAsync(int id)
         {
             return await _context.People
+                .Include(p => p.DocumentType)
                 .FirstOrDefaultAsync(s => s.PeopleId == id && !s.Isdeleted);
         }
 
@@ -92,8 +93,8 @@ namespace SIMYTSoacha.Repositories
         }
         public async Task<bool> PermissionAsync(int id, int id2)
         { 
-            return await _context.UsersXPermissions
-                .Where(s => s.UtypeId == id && s.PermissionId == id2 && !s.Isdeleted).AnyAsync();
+            return await _context.UsersXPermissions.
+                Where(s => s.UtypeId == id && s.PermissionId == id2 && !s.Isdeleted).AnyAsync();
         }
 
         public static string Encrypt(string str)

@@ -7,21 +7,36 @@ namespace SIMYTSoacha.Services
     {
         Task<IEnumerable<TypesVehicles>> GetAllTvehicleAsync();
         Task<TypesVehicles> GetTvehicleByIdAsync(int id);
-        Task CreateTvehicleAsync(TypesVehicles types);
+        Task<bool> CreateTvehicleAsync(TypesVehicles types);
         Task UpdateTvehicleAsync(TypesVehicles types);
         Task SoftDeleteTvehicleAsync(int id);
     }
     public class TVehicleService : ITvehicleService
     {
         private readonly ITvehicleRepository _vehicleRepository;
-        public TVehicleService(ITvehicleRepository tvehicle)
+        private readonly IPeopleService _peopleService;
+        private readonly IHttpContextAccessor _contextAccessor;
+        public TVehicleService(ITvehicleRepository tvehicle, IPeopleService peopleService,
+            IHttpContextAccessor httpContextAccessor)
         {
             _vehicleRepository = tvehicle;
+            _peopleService = peopleService;
+            _contextAccessor = httpContextAccessor;
         }
 
-        public Task CreateTvehicleAsync(TypesVehicles types)
+        public async Task<bool> CreateTvehicleAsync(TypesVehicles types)
         {
-            return _vehicleRepository.CreateTvehicleAsync(types);
+            int? userType = _contextAccessor.HttpContext.Session.GetInt32("UserTypeId");
+            if (userType != null)
+            {
+                if (await _peopleService.PermissionAsync(userType.Value, 1))
+                {
+                    await _vehicleRepository.CreateTvehicleAsync(types);
+                    return true;
+                }
+                return false;
+            }
+            return false;
         }
 
         public Task<IEnumerable<TypesVehicles>> GetAllTvehicleAsync()

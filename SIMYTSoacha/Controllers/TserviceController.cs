@@ -10,9 +10,11 @@ namespace SIMYTSoacha.Controllers
     {
 
         private readonly ITserviceService _service;
-        public TserviceController(ITserviceService tserviceService)
+        private readonly IPeopleService _peopleService;
+        public TserviceController(ITserviceService tserviceService, IPeopleService peopleService)
         {
             _service = tserviceService;
+            _peopleService = peopleService;
         }
 
         [HttpGet]
@@ -46,9 +48,17 @@ namespace SIMYTSoacha.Controllers
                 return BadRequest(ModelState);
             }
 
-            await _service.CreateTserviceAsync(typesServices);
-            return CreatedAtAction(nameof(GetTserviceById), new { id = typesServices.TservicesId },
-                typesServices);
+            bool result = await _service.CreateTserviceAsync(typesServices);
+
+            if (result)
+            {
+                return CreatedAtAction(nameof(GetTserviceById), new { id = typesServices.TservicesId },
+                    typesServices);
+            }
+            else
+            {
+                return BadRequest("No tienes permisos!");
+            }
         }
 
         [HttpPut("{id}")]
@@ -57,22 +67,40 @@ namespace SIMYTSoacha.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateTservice(int id, [FromForm] TypesServices typesServices)
         {
-            if (id != typesServices.TservicesId)
+            var userTypeId = HttpContext.Session.GetInt32("UserTypeId");
+
+            if (userTypeId == null)
             {
-                return BadRequest("ID does not exist");
+                return Unauthorized("Por favor, inicia sesión para continuar.");
             }
-
-            var existingTservice = await _service.GetTserviceByIdAsync(id);
-            if (existingTservice == null)
+            else
             {
-                return NotFound();
+                bool result = await _peopleService.PermissionAsync(userTypeId.Value, 3);
+                if (result)
+                {
+
+                    if (id != typesServices.TservicesId)
+                    {
+                        return BadRequest("ID does not exist");
+                    }
+
+                    var existingTservice = await _service.GetTserviceByIdAsync(id);
+                    if (existingTservice == null)
+                    {
+                        return NotFound();
+                    }
+
+                    existingTservice.TservicesName = typesServices.TservicesName;
+                    existingTservice.Isdeleted = typesServices.Isdeleted;
+
+                    await _service.UpdateTserviceAsync(existingTservice);
+                    return NoContent();
+                }
+                else
+                {
+                    return Unauthorized("No tiene el permiso, para poder actualizar registros.");
+                }
             }
-
-            existingTservice.TservicesName = typesServices.TservicesName;
-            existingTservice.Isdeleted = typesServices.Isdeleted;
-
-            await _service.UpdateTserviceAsync(existingTservice);
-            return NoContent();
         }
 
         [HttpDelete("{id}")]
@@ -80,12 +108,29 @@ namespace SIMYTSoacha.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> SoftDeleteTservice(int id)
         {
-            var Tservice = await _service.GetTserviceByIdAsync(id);
-            if (Tservice == null)
-                return NotFound();
+            var userTypeId = HttpContext.Session.GetInt32("UserTypeId");
 
-            await _service.SoftDeleteTserviceAsync(id);
-            return NoContent();
+            if (userTypeId == null)
+            {
+                return Unauthorized("Por favor, inicia sesión para continuar.");
+            }
+            else
+            {
+                bool result = await _peopleService.PermissionAsync(userTypeId.Value, 2);
+                if (result)
+                {
+                    var Tservice = await _service.GetTserviceByIdAsync(id);
+                    if (Tservice == null)
+                        return NotFound();
+
+                    await _service.SoftDeleteTserviceAsync(id);
+                    return NoContent();
+                }
+                else
+                {
+                    return Unauthorized("No tiene el permiso, para poder eliminar registros.");
+                }
+            }
         }
     }
 }

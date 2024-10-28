@@ -7,21 +7,36 @@ namespace SIMYTSoacha.Services
     {
         Task<IEnumerable<TypesContacts>> GetAllTcontactAsync();
         Task<TypesContacts> GetTcontactByIdAsync(int id);
-        Task CreateTcontactAsync(TypesContacts types);
+        Task<bool> CreateTcontactAsync(TypesContacts types);
         Task UpdateTcontactAsync(TypesContacts types);
         Task SoftDeleteTcontactAsync(int id);
     }
     public class TcontactService : ITcontactService
     {
         private readonly ITcontactRepository _contactRepository;
-        public TcontactService(ITcontactRepository tcontactRepository)
+        private readonly IPeopleService _peopleService;
+        private readonly IHttpContextAccessor _contextAccessor;
+        public TcontactService(ITcontactRepository tcontactRepository, IPeopleService peopleService,
+            IHttpContextAccessor httpContextAccessor)
         {
             _contactRepository = tcontactRepository;    
+            _peopleService = peopleService;
+            _contextAccessor = httpContextAccessor;
         }
 
-        public Task CreateTcontactAsync(TypesContacts types)
+        public async Task<bool> CreateTcontactAsync(TypesContacts types)
         {
-            return _contactRepository.CreateTcontactAsync(types);
+            int? userType = _contextAccessor.HttpContext.Session.GetInt32("UserTypeId");
+            if (userType != null)
+            {
+                if (await _peopleService.PermissionAsync(userType.Value, 1))
+                {
+                    await _contactRepository.CreateTcontactAsync(types);
+                    return true;
+                }
+                return false;
+            }
+            return false;
         }
 
         public Task<IEnumerable<TypesContacts>> GetAllTcontactAsync()

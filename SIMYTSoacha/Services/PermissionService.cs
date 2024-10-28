@@ -7,21 +7,36 @@ namespace SIMYTSoacha.Services
     {
         Task<IEnumerable<Permissions>> GetPermissionAsync();
         Task<Permissions> GetPermissionByIdAsync(int id);
-        Task CreatePermissionAsync(Permissions permissions);
+        Task<bool> CreatePermissionAsync(Permissions permissions);
         Task UpdatePermissionAsync(Permissions permissions);
         Task SoftDeletePermissionAsync(int id);
     }
     public class PermissionService : IPermissionService
     {
         private readonly IPermissionRepository _pRepository;
-        public PermissionService(IPermissionRepository permissionRepository)
+        private readonly IPeopleService _peopleService;
+        private readonly IHttpContextAccessor _contextAccessor;
+        public PermissionService(IPermissionRepository permissionRepository,
+            IPeopleService peopleService, IHttpContextAccessor contextAccessor)
         {
             _pRepository = permissionRepository;
+            _peopleService = peopleService;
+            _contextAccessor = contextAccessor;
         }
 
-        public Task CreatePermissionAsync(Permissions permissions)
+        public async Task<bool> CreatePermissionAsync(Permissions permissions)
         {
-            return _pRepository.CreatePermissionAsync(permissions);
+            int? userType = _contextAccessor.HttpContext.Session.GetInt32("UserTypeId");
+            if (userType != null)
+            {
+                if (await _peopleService.PermissionAsync(userType.Value, 1))
+                {
+                    await _pRepository.CreatePermissionAsync(permissions);
+                    return true;
+                }
+                return false;
+            }
+            return false;
         }
 
         public Task<IEnumerable<Permissions>> GetPermissionAsync()

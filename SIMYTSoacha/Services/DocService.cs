@@ -7,7 +7,7 @@ namespace SIMYTSoacha.Services
     {
         Task<IEnumerable<DocumentsTypes>> GetAllDocAsync();
         Task<DocumentsTypes> GetDocByIdAsync(int id);
-        Task CreateDocAsync(DocumentsTypes contact);
+        Task<bool> CreateDocAsync(DocumentsTypes contact);
         Task UpdateDocAsync(DocumentsTypes contact);
         Task SoftDeleteDoctAsync(int id);
     }
@@ -15,10 +15,14 @@ namespace SIMYTSoacha.Services
     public class DocService : IDocService
     {
         private readonly IDocRepository _docRepository;
-
-        public DocService(IDocRepository contactRepository)
+        private readonly IPeopleService _peopleService;
+        private readonly IHttpContextAccessor _contextAccessor;
+        public DocService(IDocRepository contactRepository, IPeopleService peopleService,
+            IHttpContextAccessor httpContextAccessor)
         {
             _docRepository = contactRepository;
+            _peopleService = peopleService;
+            _contextAccessor = httpContextAccessor;
         }
 
         public async Task<IEnumerable<DocumentsTypes>> GetAllDocAsync()
@@ -31,9 +35,19 @@ namespace SIMYTSoacha.Services
             return await _docRepository.GetDocByIdAsync(id);
         }
 
-        public async Task CreateDocAsync(DocumentsTypes doc)
+        public async Task<bool> CreateDocAsync(DocumentsTypes doc)
         {
-            await _docRepository.CreateDocAsync(doc);
+            int? userType = _contextAccessor.HttpContext.Session.GetInt32("UserTypeId");
+            if (userType != null)
+            {
+                if (await _peopleService.PermissionAsync(userType.Value, 1))
+                {
+                    await _docRepository.CreateDocAsync(doc); ;
+                    return true;
+                }
+                return false;
+            }
+            return false;
         }
 
         public async Task UpdateDocAsync(DocumentsTypes doc)

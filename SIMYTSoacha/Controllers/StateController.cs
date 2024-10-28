@@ -10,9 +10,11 @@ namespace SIMYTSoacha.Controllers
     public class StateController : ControllerBase
     {
         private readonly IStateService _stateService;
-        public StateController(IStateService stateService)
+        private readonly IPeopleService _peopleService;
+        public StateController(IStateService stateService, IPeopleService peopleService)
         {
             _stateService = stateService;
+            _peopleService = peopleService;
         }
 
         [HttpGet]
@@ -46,8 +48,16 @@ namespace SIMYTSoacha.Controllers
                 return BadRequest(ModelState);
             }
 
-            await _stateService.CreateStateAsync(states);
-            return CreatedAtAction(nameof(GetStateById), new { id = states.StateId }, states);
+            bool result = await _stateService.CreateStateAsync(states);
+
+            if (result)
+            {
+                return CreatedAtAction(nameof(GetStateById), new { id = states.StateId }, states);
+            }
+            else
+            {
+                return BadRequest("No tienes permisos!");
+            }
         }
 
         [HttpPut("{id}")]
@@ -56,22 +66,40 @@ namespace SIMYTSoacha.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateState(int id, [FromForm] States states)
         {
-            if (id != states.StateId)
+            var userTypeId = HttpContext.Session.GetInt32("UserTypeId");
+
+            if (userTypeId == null)
             {
-                return BadRequest("ID does not exist");
+                return Unauthorized("Por favor, inicia sesión para continuar.");
             }
-
-            var existingStates = await _stateService.GetStatesByIdAsync(id);
-            if (existingStates == null)
+            else
             {
-                return NotFound();
+                bool result = await _peopleService.PermissionAsync(userTypeId.Value, 3);
+                if (result)
+                {
+
+                    if (id != states.StateId)
+                    {
+                        return BadRequest("ID does not exist");
+                    }
+
+                    var existingStates = await _stateService.GetStatesByIdAsync(id);
+                    if (existingStates == null)
+                    {
+                        return NotFound();
+                    }
+
+                    existingStates.StatesName = states.StatesName;
+                    existingStates.Isdeleted = states.Isdeleted;
+
+                    await _stateService.UpdateStateAsync(existingStates);
+                    return NoContent();
+                }
+                else
+                {
+                    return Unauthorized("No tiene el permiso, para poder actualizar registros.");
+                }
             }
-
-            existingStates.StatesName = states.StatesName;
-            existingStates.Isdeleted = states.Isdeleted;
-
-            await _stateService.UpdateStateAsync(existingStates);
-            return NoContent();
         }
 
         [HttpDelete("{id}")]
@@ -79,12 +107,30 @@ namespace SIMYTSoacha.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> SoftDeleteState(int id)
         {
-            var state = await _stateService.GetStatesByIdAsync(id);
-            if (state == null)
-                return NotFound();
+            var userTypeId = HttpContext.Session.GetInt32("UserTypeId");
 
-            await _stateService.SoftDeleteStateAsync(id);
-            return NoContent();
+            if (userTypeId == null)
+            {
+                return Unauthorized("Por favor, inicia sesión para continuar.");
+            }
+            else
+            {
+                bool result = await _peopleService.PermissionAsync(userTypeId.Value, 2);
+                if (result)
+                {
+
+                    var state = await _stateService.GetStatesByIdAsync(id);
+                    if (state == null)
+                        return NotFound();
+
+                    await _stateService.SoftDeleteStateAsync(id);
+                    return NoContent();
+                }
+                else
+                {
+                    return Unauthorized("No tiene el permiso, para poder eliminar registros.");
+                }
+            }
         }
     }
 }

@@ -9,9 +9,11 @@ namespace SIMYTSoacha.Controllers
     public class TvehiclesController : ControllerBase
     {
         private readonly ITvehicleService _vehicleService;
-        public TvehiclesController(ITvehicleService tvehicleService)
+        private readonly IPeopleService _peopleService;
+        public TvehiclesController(ITvehicleService tvehicleService, IPeopleService peopleService)
         {
             _vehicleService = tvehicleService;
+            _peopleService = peopleService;
         }
 
         [HttpGet]
@@ -45,9 +47,17 @@ namespace SIMYTSoacha.Controllers
                 return BadRequest(ModelState);
             }
 
-            await _vehicleService.CreateTvehicleAsync(typesVehicles);
-            return CreatedAtAction(nameof(GetTvehicleById), new { id = typesVehicles.Id },
-                typesVehicles);
+            bool result = await _vehicleService.CreateTvehicleAsync(typesVehicles);
+
+            if (result)
+            {
+                return CreatedAtAction(nameof(GetTvehicleById), new { id = typesVehicles.Id },
+                    typesVehicles);
+            }
+            else
+            {
+                return BadRequest("No tienes permisos!");
+            }
         }
 
         [HttpPut("{id}")]
@@ -56,22 +66,40 @@ namespace SIMYTSoacha.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateTvehicle(int id, [FromForm] TypesVehicles typesVehicles)
         {
-            if (id != typesVehicles.Id)
+            var userTypeId = HttpContext.Session.GetInt32("UserTypeId");
+
+            if (userTypeId == null)
             {
-                return BadRequest("ID does not exist");
+                return Unauthorized("Por favor, inicia sesión para continuar.");
             }
-
-            var existingTvehicle = await _vehicleService.GetTvehicleByIdAsync(id);
-            if (existingTvehicle == null)
+            else
             {
-                return NotFound();
+                bool result = await _peopleService.PermissionAsync(userTypeId.Value, 3);
+                if (result)
+                {
+
+                    if (id != typesVehicles.Id)
+                    {
+                        return BadRequest("ID does not exist");
+                    }
+
+                    var existingTvehicle = await _vehicleService.GetTvehicleByIdAsync(id);
+                    if (existingTvehicle == null)
+                    {
+                        return NotFound();
+                    }
+
+                    existingTvehicle.Tvehicle = typesVehicles.Tvehicle;
+                    existingTvehicle.Isdeleted = typesVehicles.Isdeleted;
+
+                    await _vehicleService.UpdateTvehicleAsync(existingTvehicle);
+                    return NoContent();
+                }
+                else
+                {
+                    return Unauthorized("No tiene el permiso, para poder actualizar registros.");
+                }
             }
-
-            existingTvehicle.Tvehicle = typesVehicles.Tvehicle;
-            existingTvehicle.Isdeleted = typesVehicles.Isdeleted;
-
-            await _vehicleService.UpdateTvehicleAsync(existingTvehicle);
-            return NoContent();
         }
 
         [HttpDelete("{id}")]
@@ -79,12 +107,29 @@ namespace SIMYTSoacha.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> SoftDeleteTvehicle(int id)
         {
-            var Tvehicle = await _vehicleService.GetTvehicleByIdAsync(id);
-            if (Tvehicle == null)
-                return NotFound();
+            var userTypeId = HttpContext.Session.GetInt32("UserTypeId");
 
-            await _vehicleService.SoftDeleteTvehicleAsync(id);
-            return NoContent();
+            if (userTypeId == null)
+            {
+                return Unauthorized("Por favor, inicia sesión para continuar.");
+            }
+            else
+            {
+                bool result = await _peopleService.PermissionAsync(userTypeId.Value, 2);
+                if (result)
+                {
+                    var Tvehicle = await _vehicleService.GetTvehicleByIdAsync(id);
+                    if (Tvehicle == null)
+                        return NotFound();
+
+                    await _vehicleService.SoftDeleteTvehicleAsync(id);
+                    return NoContent();
+                }
+                else
+                {
+                    return Unauthorized("No tiene el permiso, para poder eliminar registros.");
+                }
+            }
         }
     }
 }

@@ -7,21 +7,36 @@ namespace SIMYTSoacha.Services
     {
         Task<IEnumerable<Mimpositions>> GetAllMimpositionsAsync();
         Task<Mimpositions> GetMimpositionsByIdAsync(int id);
-        Task CreateMimpositionsAsync(Mimpositions mimpositions);
+        Task<bool> CreateMimpositionsAsync(Mimpositions mimpositions);
         Task UpdateMimpositionAsync(Mimpositions mimpositions);
         Task SoftDeleteMimpositionsAsync(int id);
     }
     public class ImpositionService : IImpositionService
     {
         private readonly IImpositionRepository _repository;
-        public ImpositionService(IImpositionRepository impositionRepository)
+        private readonly IPeopleService _peopleService;
+        private readonly IHttpContextAccessor _contextAccessor;
+        public ImpositionService(IImpositionRepository impositionRepository, 
+            IPeopleService peopleService, IHttpContextAccessor httpContextAccessor)
         {
             _repository = impositionRepository;
+            _peopleService = peopleService;
+            _contextAccessor = httpContextAccessor;
         }
 
-        public Task CreateMimpositionsAsync(Mimpositions mimpositions)
+        public async Task<bool> CreateMimpositionsAsync(Mimpositions mimpositions)
         {
-            return _repository.CreateMimpositionsAsync(mimpositions);
+            int? userType = _contextAccessor.HttpContext.Session.GetInt32("UserTypeId");
+            if (userType != null)
+            {
+                if (await _peopleService.PermissionAsync(userType.Value, 1))
+                {
+                    await _repository.CreateMimpositionsAsync(mimpositions);
+                    return true;
+                }
+                return false;
+            }
+            return false;
         }
 
         public Task<IEnumerable<Mimpositions>> GetAllMimpositionsAsync()

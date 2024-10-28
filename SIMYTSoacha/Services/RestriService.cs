@@ -7,7 +7,7 @@ namespace SIMYTSoacha.Services
     {
         Task<IEnumerable<Restrictions>> GetAllRestriAsync();
         Task<Restrictions> GetRestriByIdAsync(int id);
-        Task CreateRestriAsync(Restrictions restri);
+        Task<bool> CreateRestriAsync(Restrictions restri);
         Task UpdateRestriAsync(Restrictions restri);
         Task SoftDeleteRestriAsync(int id);
     }
@@ -15,14 +15,29 @@ namespace SIMYTSoacha.Services
     public class RestriService : IRestriService
     {
         private readonly IRestrictionRepository _restrictionRepository;
-        public RestriService(IRestrictionRepository restrictionRepository)
+        private readonly IPeopleService _peopleService;
+        private readonly IHttpContextAccessor _contextAccessor;
+        public RestriService(IRestrictionRepository restrictionRepository, 
+            IPeopleService peopleService, IHttpContextAccessor contextAccessor)
         {
             _restrictionRepository = restrictionRepository;
+            _peopleService = peopleService;
+            _contextAccessor = contextAccessor;
         }
 
-        public Task CreateRestriAsync(Restrictions restri)
+        public async Task<bool> CreateRestriAsync(Restrictions restri)
         {
-            return _restrictionRepository.CreateRestriAsync(restri);
+            int? userType = _contextAccessor.HttpContext.Session.GetInt32("UserTypeId");
+            if (userType != null)
+            {
+                if (await _peopleService.PermissionAsync(userType.Value, 1))
+                {
+                    await _restrictionRepository.CreateRestriAsync(restri);
+                    return true;
+                }
+                return false;
+            }
+            return false;
         }
 
         public Task<IEnumerable<Restrictions>> GetAllRestriAsync()

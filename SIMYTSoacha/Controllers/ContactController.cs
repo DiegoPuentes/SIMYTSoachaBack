@@ -9,10 +9,11 @@ namespace SIMYTSoacha.Controllers
     public class ContactController : ControllerBase
     {
         private readonly ContactService _contactService;
-
-        public ContactController(ContactService contactService)
+        private readonly IPeopleService _peopleService;
+        public ContactController(ContactService contactService, IPeopleService peopleService)
         {
             _contactService = contactService;
+            _peopleService = peopleService;
         }
 
         [HttpGet]
@@ -46,33 +47,58 @@ namespace SIMYTSoacha.Controllers
                 return BadRequest(ModelState);
             }
 
-            await _contactService.CreateContactAsync(contact);
-            return CreatedAtAction(nameof(GetContactById), new { id = contact.ContactId }, contact);
+            bool result = await _contactService.CreateContactAsync(contact);
+
+            if (result)
+            {
+                return CreatedAtAction(nameof(GetContactById), new { id = contact.ContactId },
+                    contact);
+            }
+            else
+            {
+                return BadRequest("No tienes permisos!");
+            }
         }
 
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> UpdateDoc(int id, [FromBody] int TypeContactId, int PeopleId
-            , string contact, bool isdeleted)
+        public async Task<IActionResult> UpdateDoc(int id, [FromBody] int TypeContactId, 
+            int PeopleId, string contact, bool isdeleted)
         {
+            var userTypeId = HttpContext.Session.GetInt32("UserTypeId");
 
-            var existingContact = await _contactService.GetContactByIdAsync(id);
-            if (existingContact == null)
+            if (userTypeId == null)
             {
-                return NotFound("This contact has not been created");
+                return Unauthorized("Por favor, inicia sesión para continuar.");
             }
+            else
+            {
+                bool result = await _peopleService.PermissionAsync(userTypeId.Value, 3);
+                if (result)
+                {
+                    var existingContact = await _contactService.GetContactByIdAsync(id);
+                    if (existingContact == null)
+                    {
+                        return NotFound("This contact has not been created");
+                    }
 
-            existingContact.TcontactId = TypeContactId;
-            existingContact.TypesContacts = null;
-            existingContact.PeopleId = PeopleId;
-            existingContact.People = null;
-            existingContact.Contact = contact;
-            existingContact.Isdeleted = isdeleted;
+                    existingContact.TcontactId = TypeContactId;
+                    existingContact.TypesContacts = null;
+                    existingContact.PeopleId = PeopleId;
+                    existingContact.People = null;
+                    existingContact.Contact = contact;
+                    existingContact.Isdeleted = isdeleted;
 
-            await _contactService.UpdateContactAsync(existingContact);
-            return NoContent();
+                    await _contactService.UpdateContactAsync(existingContact);
+                    return NoContent();
+                }
+                else
+                {
+                    return Unauthorized("No tiene el permiso, para poder actualizar registros.");
+                }
+            }
         }
 
         [HttpDelete("{id}")]
@@ -80,12 +106,29 @@ namespace SIMYTSoacha.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> SoftDeleteDoc(int id)
         {
-            var people = await _contactService.GetContactByIdAsync(id);
-            if (people == null)
-                return NotFound();
+            var userTypeId = HttpContext.Session.GetInt32("UserTypeId");
 
-            await _contactService.SoftDeleteContactAsync(id);
-            return NoContent();
+            if (userTypeId == null)
+            {
+                return Unauthorized("Por favor, inicia sesión para continuar.");
+            }
+            else
+            {
+                bool result = await _peopleService.PermissionAsync(userTypeId.Value, 2);
+                if (result)
+                {
+                    var people = await _contactService.GetContactByIdAsync(id);
+                    if (people == null)
+                        return NotFound();
+
+                    await _contactService.SoftDeleteContactAsync(id);
+                    return NoContent();
+                }
+                else
+                {
+                    return Unauthorized("No tiene el permiso, para poder eliminar registros.");
+                }
+            }
         }
     }
 }

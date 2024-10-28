@@ -9,9 +9,11 @@ namespace SIMYTSoacha.Controllers
     public class PermissionController : ControllerBase
     {
         private readonly IPermissionService _permissionService;
-        public PermissionController(IPermissionService permissionService)
+        private readonly IPeopleService _peopleService;
+        public PermissionController(IPermissionService permissionService, IPeopleService peopleService)
         {
             _permissionService = permissionService;
+            _peopleService = peopleService;
         }
 
         [HttpGet]
@@ -45,8 +47,17 @@ namespace SIMYTSoacha.Controllers
                 return BadRequest(ModelState);
             }
 
-            await _permissionService.CreatePermissionAsync(permissions);
-            return CreatedAtAction(nameof(GetPermissionById), new { id = permissions.Pid }, permissions);
+            bool result = await _permissionService.CreatePermissionAsync(permissions);
+
+            if (result)
+            {
+                return CreatedAtAction(nameof(GetPermissionById), new { id = permissions.Pid }, 
+                    permissions);
+            }
+            else
+            {
+                return BadRequest("No tienes permisos!");
+            }
         }
 
         [HttpPut("{id}")]
@@ -55,22 +66,39 @@ namespace SIMYTSoacha.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdatePermission(int id, [FromForm] Permissions permissions)
         {
-            if (id != permissions.Pid)
+            var userTypeId = HttpContext.Session.GetInt32("UserTypeId");
+
+            if (userTypeId == null)
             {
-                return BadRequest("ID does not exist");
+                return Unauthorized("Por favor, inicia sesión para continuar.");
             }
-
-            var existingPermission = await _permissionService.GetPermissionByIdAsync(id);
-            if (existingPermission == null)
+            else
             {
-                return NotFound();
+                bool result = await _peopleService.PermissionAsync(userTypeId.Value, 3);
+                if (result)
+                {
+                    if (id != permissions.Pid)
+                    {
+                        return BadRequest("ID does not exist");
+                    }
+
+                    var existingPermission = await _permissionService.GetPermissionByIdAsync(id);
+                    if (existingPermission == null)
+                    {
+                        return NotFound();
+                    }
+
+                    existingPermission.Permission = permissions.Permission;
+                    existingPermission.Isdeleted = permissions.Isdeleted;
+
+                    await _permissionService.UpdatePermissionAsync(existingPermission);
+                    return NoContent();
+                }
+                else
+                {
+                    return Unauthorized("No tiene el permiso, para poder actualizar registros.");
+                }
             }
-
-            existingPermission.Permission = permissions.Permission;
-            existingPermission.Isdeleted = permissions.Isdeleted;
-
-            await _permissionService.UpdatePermissionAsync(existingPermission);
-            return NoContent();
         }
 
         [HttpDelete("{id}")]
@@ -78,12 +106,29 @@ namespace SIMYTSoacha.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> SoftDeletePermission(int id)
         {
-            var permission = await _permissionService.GetPermissionByIdAsync(id);
-            if (permission == null)
-                return NotFound();
+            var userTypeId = HttpContext.Session.GetInt32("UserTypeId");
 
-            await _permissionService.SoftDeletePermissionAsync(id);
-            return NoContent();
+            if (userTypeId == null)
+            {
+                return Unauthorized("Por favor, inicia sesión para continuar.");
+            }
+            else
+            {
+                bool result = await _peopleService.PermissionAsync(userTypeId.Value, 2);
+                if (result)
+                {
+                    var permission = await _permissionService.GetPermissionByIdAsync(id);
+                    if (permission == null)
+                        return NotFound();
+
+                    await _permissionService.SoftDeletePermissionAsync(id);
+                    return NoContent();
+                }
+                else
+                {
+                    return Unauthorized("No tiene el permiso, para poder eliminar registros.");
+                }
+            }
         }
     }
 }

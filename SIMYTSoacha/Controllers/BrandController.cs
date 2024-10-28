@@ -9,11 +9,11 @@ namespace SIMYTSoacha.Controllers
     public class BrandController : ControllerBase
     {
         private readonly IBrandService _brandService;
-        private readonly IPeopleService people;
-        public BrandController(IBrandService brandService, IPeopleService peopleService)
+        private readonly IPeopleService _peopleService;
+        public BrandController(IBrandService brandService, IPeopleService people)
         {
             _brandService = brandService;
-            people = peopleService;
+            _peopleService = people;
         }
 
         [HttpGet]
@@ -42,13 +42,21 @@ namespace SIMYTSoacha.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> CreateBrands([FromForm] Brands brands)
         {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-                await _brandService.CreateBrandsAsync(brands);
+            bool result = await _brandService.CreateBrandsAsync(brands);
+
+            if (result)
+            {
                 return CreatedAtAction(nameof(GetBrandById), new { id = brands.Id }, brands);
+            }
+            else
+            {
+                return BadRequest("No tienes permisos!");
+            }    
         }
 
         [HttpPut("{id}")]
@@ -57,22 +65,39 @@ namespace SIMYTSoacha.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateBrands(int id, [FromForm] Brands brands)
         {
-            if (id != brands.Id)
+            var userTypeId = HttpContext.Session.GetInt32("UserTypeId");
+
+            if (userTypeId == null)
             {
-                return BadRequest("ID does not exist");
+                return Unauthorized("Por favor, inicia sesión para continuar.");
             }
-
-            var existingBrands = await _brandService.GetBrandsByIdAsync(id);
-            if (existingBrands == null)
+            else
             {
-                return NotFound();
+                bool result = await _peopleService.PermissionAsync(userTypeId.Value, 3);
+                if (result)
+                {
+                    if (id != brands.Id)
+                    {
+                        return BadRequest("ID does not exist");
+                    }
+
+                    var existingBrands = await _brandService.GetBrandsByIdAsync(id);
+                    if (existingBrands == null)
+                    {
+                        return NotFound();
+                    }
+
+                    existingBrands.Name = brands.Name;
+                    existingBrands.IsDeleted = brands.IsDeleted;
+
+                    await _brandService.UpdateBrandsAsync(existingBrands);
+                    return NoContent();
+                }
+                else
+                {
+                    return Unauthorized("No tiene el permiso, para poder actualizar registros.");
+                }
             }
-
-            existingBrands.Name = brands.Name;
-            existingBrands.IsDeleted = brands.IsDeleted;
-
-            await _brandService.UpdateBrandsAsync(existingBrands);
-            return NoContent();
         }
 
         [HttpDelete("{id}")]
@@ -80,12 +105,29 @@ namespace SIMYTSoacha.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> SoftDeleteBrands(int id)
         {
-            var brands = await _brandService.GetBrandsByIdAsync(id);
-            if (brands == null)
-                return NotFound();
+            var userTypeId = HttpContext.Session.GetInt32("UserTypeId");
 
-            await _brandService.SoftDeleteBrandsAsync(id);
-            return NoContent();
+            if (userTypeId == null)
+            {
+                return Unauthorized("Por favor, inicia sesión para continuar.");
+            }
+            else
+            {
+                bool result = await _peopleService.PermissionAsync(userTypeId.Value, 2);
+                if (result)
+                {
+                    var brands = await _brandService.GetBrandsByIdAsync(id);
+                    if (brands == null)
+                        return NotFound();
+
+                    await _brandService.SoftDeleteBrandsAsync(id);
+                    return NoContent();
+                }
+                else
+                {
+                    return Unauthorized("No tiene el permiso, para poder eliminar registros.");
+                }
+            }
         }
     }
 }
