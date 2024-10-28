@@ -75,7 +75,7 @@ builder.Services.AddDistributedMemoryCache();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(30); // Duración de la sesión
+    options.IdleTimeout = TimeSpan.FromMinutes(60); // Duración de la sesión
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true; // Necesario para GDPR
 });

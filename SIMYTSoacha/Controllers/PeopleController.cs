@@ -200,25 +200,38 @@ namespace SIMYTSoacha.Controllers
             return Ok(new { Token = "Validación exitosa", UserTypeId = login.UserTypeId });
         }
 
-
         [HttpGet("Permission")]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<bool> CheckUserPermission(int rol)
         {
-            int type = (int)HttpContext.Session.GetInt32("UserTypeId");
+            var userTypeId = HttpContext.Session.GetInt32("UserTypeId");
 
-            bool hasPermission = await _peopleService.PermissionAsync(type, rol);
-
-            if (hasPermission)
-            {
-                return true;
-            }
-            else
+            if (userTypeId == null)
             {
                 return false;
             }
+            else
+            {
+                bool hasPermission = await _peopleService.PermissionAsync((int)userTypeId, rol);
+
+                if (hasPermission)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
         }
+
+        [HttpPost("Logout")]
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            Response.Cookies.Delete(".AspNetCore.Session");
+
+            return Ok(new { message = "Sesión finalizada" });
+        }
+
     }
 }
