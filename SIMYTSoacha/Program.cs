@@ -110,7 +110,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 
 app.UseSwagger();
-app.UseCors("AllowAllOrigins");
+
 app.UseSwaggerUI();
 
 
@@ -119,6 +119,8 @@ app.UseHttpsRedirection();
 app.UseSession();
 
 app.UseRouting();
+
+app.UseCors("AllowSpecificOrigin");
 
 app.UseAuthorization();
 

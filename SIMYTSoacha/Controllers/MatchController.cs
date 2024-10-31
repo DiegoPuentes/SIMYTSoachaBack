@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
 using SIMYTSoacha.Model;
 using SIMYTSoacha.Services;
 
@@ -38,6 +39,7 @@ namespace SIMYTSoacha.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [EnableCors("AllowAllOrigins")]
         public async Task<ActionResult> CreateMatch([FromBody] MatchRequest matches)
         {
             if (!ModelState.IsValid)

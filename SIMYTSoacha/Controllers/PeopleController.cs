@@ -163,6 +163,7 @@ namespace SIMYTSoacha.Controllers
         }
         
         [HttpPost("Login")]
+        [EnableCors("AllowAllOrigins")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -212,7 +213,6 @@ namespace SIMYTSoacha.Controllers
         }
 
         [HttpPost("Logout")]
-        [EnableCors("AllowSpecificOrigin")]
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();
