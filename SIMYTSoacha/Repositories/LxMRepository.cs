@@ -7,7 +7,7 @@ namespace SIMYTSoacha.Repositories
     public interface ILxMRepository
     {
         Task<IEnumerable<LevelsxMatches>> GetAllLxMAsync();
-        Task<LevelsxMatches> CreateLxMAsync(int id, int iid, bool isdeleted);
+        Task<LevelsxMatches> CreateLxMAsync(int id, int iid, int scored, bool isdeleted);
     }
     public class LxMRepository : ILxMRepository
     {
@@ -17,7 +17,7 @@ namespace SIMYTSoacha.Repositories
             context = _context;
         }
 
-        public async Task<LevelsxMatches> CreateLxMAsync(int id, int iid, bool isdeleted)
+        public async Task<LevelsxMatches> CreateLxMAsync(int id, int iid, int scored, bool isdeleted)
         {
             LevelsxMatches lxm = new LevelsxMatches
             {
@@ -25,6 +25,7 @@ namespace SIMYTSoacha.Repositories
                 Levels = null,
                 MatchId = id,
                 Matchs = null,
+                Scored = scored,
                 IsDeleted = isdeleted 
             };
 

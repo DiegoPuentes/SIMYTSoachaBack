@@ -61,33 +61,18 @@ namespace SIMYTSoacha.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> CreatePeople([FromForm] string name, string lnames,
-            int dtypeid, string ndocument, int sex, DateTime date, int utypeid, string user,
-            string password, bool isdeleted)
+        public async Task<ActionResult> CreatePeople([FromBody] PeopleRequest request)
         {
-            var userTypeId = HttpContext.Session.GetInt32("UserTypeId");
-            if (userTypeId == null)
+            if (!ModelState.IsValid)
             {
-                return Unauthorized("Por favor, inicia sesión para continuar.");
+                return BadRequest(ModelState);
             }
-            else
-            {
-                if (await CheckUserPermission(1))
-                {
-                    return BadRequest("No tienes los permisos");
-                }
-                else
-                {
-                    if (!ModelState.IsValid)
-                    {
-                        return BadRequest(ModelState);
-                    }
 
-                    People people = await _peopleService.CreatePeopleAsync(name, lnames, dtypeid, ndocument,
-                        sex, date, utypeid, user, password, isdeleted);
-                    return CreatedAtAction(nameof(GetPeopleById), new { id = people.PeopleId }, people);
-                }
-            }            
+            People people = await _peopleService.CreatePeopleAsync(request.Name, request.Lnames, request.DtypeId,
+                        request.Ndocument, request.Sex, request.Date, request.UtypeId, request.User,
+                        request.Password, request.IsDeleted);
+
+            return CreatedAtAction(nameof(GetPeopleById), new { id = people.PeopleId }, people);
         }
 
         [HttpPut("{id}")]
@@ -197,7 +182,8 @@ namespace SIMYTSoacha.Controllers
 
             HttpContext.Session.SetInt32("UserTypeId", login.UserTypeId);
 
-            return Ok(new { Token = "Validación exitosa", UserTypeId = login.UserTypeId });
+            return Ok(new { Token = "Validación exitosa", UserTypeId = login.UserTypeId, 
+                PeopleId = login.PeopleId, Name = login.Names });
         }
 
         [HttpGet("Permission")]
@@ -231,6 +217,20 @@ namespace SIMYTSoacha.Controllers
             Response.Cookies.Delete(".AspNetCore.Session");
 
             return Ok(new { message = "Sesión finalizada" });
+        }
+
+        public class PeopleRequest
+        {
+            public string Name { get; set; }
+            public string Lnames { get; set; }
+            public int DtypeId { get; set; }
+            public string Ndocument { get; set; }
+            public int Sex { get; set; }
+            public DateTime Date { get; set; }
+            public int UtypeId { get; set; }
+            public string User { get; set; }
+            public string Password { get; set; }
+            public bool IsDeleted { get; set; }
         }
 
     }

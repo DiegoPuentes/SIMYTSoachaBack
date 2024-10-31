@@ -26,15 +26,23 @@ namespace SIMYTSoacha.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> CreateLxM([FromForm] int LevelId, int MarchId, bool isdeleted)
+        public async Task<ActionResult> CreateLxM([FromBody] LxmRequest request)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            LevelsxMatches level = await _lxMService.CreateLxMAsync(LevelId, MarchId, isdeleted);
+            LevelsxMatches level = await _lxMService.CreateLxMAsync(request.LevelId, request.MatchId, request.Scored, request.isdeleted);
             return Created(nameof(CreateLxM), level);
+        }
+
+        public class LxmRequest
+        {
+            public int LevelId { get; set; }
+            public int MatchId { get; set; }
+            public int Scored { get; set; }
+            public bool isdeleted { get; set; }
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SIMYTSoacha.Context;
 using SIMYTSoacha.Model;
+using System.Text.RegularExpressions;
 
 namespace SIMYTSoacha.Repositories
 {
@@ -8,7 +9,7 @@ namespace SIMYTSoacha.Repositories
     {
         Task<IEnumerable<Matches>> GetallMatchAsync();
         Task<Matches> GetMatchesByIdAsync(int id);
-        Task CreateMatchesAsync(Matches match);
+        Task<Matches> CreateMatchesAsync(int people, DateTime date, bool isdeleted);
         Task UpdateMatchesAsync(Matches match);
         Task DeleteMatchesAsync(int id);
     }
@@ -20,10 +21,18 @@ namespace SIMYTSoacha.Repositories
             _context = simytDbContext;
         }
 
-        public async Task CreateMatchesAsync(Matches match)
+        public async Task<Matches> CreateMatchesAsync(int people, DateTime date, bool isdeleted)
         {
-           _context.Matches.Add(match);
+            Matches match = new Matches
+            {
+                PeopleId = people,
+                People = null,
+                Date = date,
+                IsDeleted = isdeleted
+            };
+            _context.Matches.Add(match);
             await _context.SaveChangesAsync();
+            return match;
         }
 
         public async Task DeleteMatchesAsync(int id)

@@ -6,7 +6,7 @@ namespace SIMYTSoacha.Services
     public interface ILxMService
     {
         Task<IEnumerable<LevelsxMatches>> GetAllLxMAsync();
-        Task<LevelsxMatches> CreateLxMAsync(int id, int iid, bool isdeleted);
+        Task<LevelsxMatches> CreateLxMAsync(int id, int iid, int scored, bool isdeleted);
     }
     public class LxMService : ILxMService
     {
@@ -16,9 +16,9 @@ namespace SIMYTSoacha.Services
             lxmRepository = lxM;
         }
 
-        public Task<LevelsxMatches> CreateLxMAsync(int id, int iid, bool isdeleted)
+        public Task<LevelsxMatches> CreateLxMAsync(int id, int iid, int scored, bool isdeleted)
         {
-            return lxmRepository.CreateLxMAsync(id, iid, isdeleted);
+            return lxmRepository.CreateLxMAsync(id, iid, scored, isdeleted);
         }
 
         public Task<IEnumerable<LevelsxMatches>> GetAllLxMAsync()

@@ -38,15 +38,16 @@ namespace SIMYTSoacha.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> CreateMatch([FromForm] Matches matches)
+        public async Task<ActionResult> CreateMatch([FromBody] MatchRequest matches)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            await matchServices.CreateMatchesAsync(matches);
-            return CreatedAtAction(nameof(GetMatchById), new { id = matches.Id }, matches);
+            Matches match = await matchServices.CreateMatchesAsync(matches.PeopleId, 
+                matches.Date, matches.isdeleted);
+            return CreatedAtAction(nameof(GetMatchById), new { id = match.Id }, match);
         }
 
         [HttpPut("{id}")]
@@ -83,6 +84,13 @@ namespace SIMYTSoacha.Controllers
 
             await matchServices.DeleteMatchesAsync(id);
             return NoContent();
+        }
+
+        public class MatchRequest
+        {
+            public int PeopleId { get; set; }
+            public DateTime Date { get; set; }
+            public bool isdeleted { get; set; }
         }
     }
 }

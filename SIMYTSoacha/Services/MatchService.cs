@@ -7,7 +7,7 @@ namespace SIMYTSoacha.Services
     {
         Task<IEnumerable<Matches>> GetallMatchAsync();
         Task<Matches> GetMatchesByIdAsync(int id);
-        Task CreateMatchesAsync(Matches match);
+        Task<Matches> CreateMatchesAsync(int people, DateTime date, bool isdeleted);
         Task UpdateMatchesAsync(Matches match);
         Task DeleteMatchesAsync(int id);
     }
@@ -22,9 +22,9 @@ namespace SIMYTSoacha.Services
 
         }
 
-        public Task CreateMatchesAsync(Matches match)
+        public Task<Matches> CreateMatchesAsync(int people, DateTime date, bool isdeleted)
         {
-          return _matchRepository.CreateMatchesAsync(match);
+          return _matchRepository.CreateMatchesAsync(people, date, isdeleted);
 
         }
 

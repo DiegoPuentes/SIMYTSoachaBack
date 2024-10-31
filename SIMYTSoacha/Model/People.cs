@@ -24,6 +24,5 @@ namespace SIMYTSoacha.Model
         public required string UserName { get; set; }
         public required string Passcodes { get; set; }
         public bool Isdeleted { get; set; } = false;
-
     }
 }

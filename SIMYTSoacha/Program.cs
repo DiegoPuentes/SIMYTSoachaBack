@@ -88,11 +88,14 @@ builder.Services.AddSwaggerGen();
 // Cors Policy
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll",
-    builder => builder
-        .AllowAnyOrigin()
-        .AllowAnyMethod()
-        .AllowAnyHeader());
+    options.AddPolicy("AllowSpecificOrigin", builder =>
+        builder.WithOrigins("https://front-simyt.vercel.app/",
+        "https://front-simyt-diegopuentes-projects.vercel.app/",
+        "https://front-simyt-git-master-diegopuentes-projects.vercel.app/",
+        "http://localhost:3000/")
+               .AllowCredentials()
+               .AllowAnyHeader()
+               .AllowAnyMethod());
 });
 
 var app = builder.Build();
@@ -100,7 +103,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 
 app.UseSwagger();
-app.UseCors("AllowAll");
+app.UseCors("AllowSpecificOrigin");
 app.UseSwaggerUI();
 
 
