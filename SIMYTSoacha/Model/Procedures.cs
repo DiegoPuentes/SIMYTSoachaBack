@@ -8,7 +8,7 @@ namespace SIMYTSoacha.Model
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ProcedureId { get; set; }
-        public int Procedure {  get; set; }
+        public required string Description {  get; set; }
         public int StateId { get; set; }
         [ForeignKey("StateId")]
         public required virtual States States { get; set; } 

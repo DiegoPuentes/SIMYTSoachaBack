@@ -23,7 +23,7 @@ namespace SIMYTSoacha.Repositories
             {
                 LevelId = id,
                 Levels = null,
-                MatchId = id,
+                MatchId = iid,
                 Matchs = null,
                 Scored = scored,
                 IsDeleted = isdeleted 

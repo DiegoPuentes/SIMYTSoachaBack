@@ -393,34 +393,6 @@ namespace SIMYTSoacha.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "LevelsxMatches",
-                columns: table => new
-                {
-                    LevelId = table.Column<int>(type: "int", nullable: false),
-                    MatchId = table.Column<int>(type: "int", nullable: false),
-                    LevelsId = table.Column<int>(type: "int", nullable: false),
-                    MatchsPeopleId = table.Column<int>(type: "int", nullable: false),
-                    Scored = table.Column<int>(type: "int", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_LevelsxMatches", x => new { x.LevelId, x.MatchId });
-                    table.ForeignKey(
-                        name: "FK_LevelsxMatches_Levels_LevelsId",
-                        column: x => x.LevelsId,
-                        principalTable: "Levels",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
-                    table.ForeignKey(
-                        name: "FK_LevelsxMatches_People_MatchsPeopleId",
-                        column: x => x.MatchsPeopleId,
-                        principalTable: "People",
-                        principalColumn: "PeopleId",
-                        onDelete: ReferentialAction.NoAction);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Matches",
                 columns: table => new
                 {
@@ -513,12 +485,38 @@ namespace SIMYTSoacha.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "LevelsxMatches",
+                columns: table => new
+                {
+                    LevelId = table.Column<int>(type: "int", nullable: false),
+                    MatchId = table.Column<int>(type: "int", nullable: false),
+                    Scored = table.Column<int>(type: "int", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LevelsxMatches", x => new { x.LevelId, x.MatchId });
+                    table.ForeignKey(
+                        name: "FK_LevelsxMatches_Levels_LevelId",
+                        column: x => x.LevelId,
+                        principalTable: "Levels",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
+                    table.ForeignKey(
+                        name: "FK_LevelsxMatches_Matches_MatchId",
+                        column: x => x.MatchId,
+                        principalTable: "Matches",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Procedures",
                 columns: table => new
                 {
                     ProcedureId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Procedure = table.Column<int>(type: "int", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     StateId = table.Column<int>(type: "int", nullable: false),
                     RequestId = table.Column<int>(type: "int", nullable: false),
                     Isdeleted = table.Column<bool>(type: "bit", nullable: false)
@@ -705,14 +703,9 @@ namespace SIMYTSoacha.Migrations
                 column: "ProcedureId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_LevelsxMatches_LevelsId",
+                name: "IX_LevelsxMatches_MatchId",
                 table: "LevelsxMatches",
-                column: "LevelsId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_LevelsxMatches_MatchsPeopleId",
-                table: "LevelsxMatches",
-                column: "MatchsPeopleId");
+                column: "MatchId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Matches_PeopleId",
@@ -824,9 +817,6 @@ namespace SIMYTSoacha.Migrations
                 name: "LevelsxMatches");
 
             migrationBuilder.DropTable(
-                name: "Matches");
-
-            migrationBuilder.DropTable(
                 name: "ModelXLine");
 
             migrationBuilder.DropTable(
@@ -855,6 +845,9 @@ namespace SIMYTSoacha.Migrations
 
             migrationBuilder.DropTable(
                 name: "Levels");
+
+            migrationBuilder.DropTable(
+                name: "Matches");
 
             migrationBuilder.DropTable(
                 name: "Lines");

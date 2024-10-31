@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SIMYTSoacha.Model
@@ -7,9 +8,11 @@ namespace SIMYTSoacha.Model
     public class LevelsxMatches
     {
         public int LevelId { get; set; }
+        [ForeignKey("LevelId")]
         public virtual required Levels Levels { get; set; }
         public int MatchId { get; set; }
-        public virtual required People Matchs { get; set; }
+        [ForeignKey("MatchId")]
+        public virtual required Matches Matchs { get; set; }
         public int Scored {  get; set; }
         public required bool IsDeleted { get; set; }
     }

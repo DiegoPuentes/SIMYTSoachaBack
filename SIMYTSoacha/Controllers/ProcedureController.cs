@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SIMYTSoacha.Model;
 using SIMYTSoacha.Services;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SIMYTSoacha.Controllers
 {
@@ -38,14 +39,15 @@ namespace SIMYTSoacha.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> CreateProcedure([FromForm] int p, int sid, int rid, bool isde)
+        public async Task<ActionResult> CreateProcedure([FromBody] RequestProcedure request)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            Procedures pro = await _procedureService.CreateProceduresAsync(p, sid, rid, isde);
+            Procedures pro = await _procedureService.CreateProceduresAsync(request.Description, 
+                request.StateId, request.RequestId, request.Isdeleted);
             return CreatedAtAction(nameof(GetProcedureById), new { id = pro.ProcedureId },
                 pro);
         }
@@ -86,5 +88,13 @@ namespace SIMYTSoacha.Controllers
             await _procedureService.SoftDeleteProceduresAsync(id);
             return NoContent();
         }
+    }
+
+    public class RequestProcedure
+    {
+        public string Description { get; set; }
+        public int StateId { get; set; }
+        public int RequestId { get; set; }
+        public bool Isdeleted { get; set; } = false;
     }
 }

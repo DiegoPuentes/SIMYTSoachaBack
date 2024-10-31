@@ -320,20 +320,12 @@ namespace SIMYTSoacha.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<int>("LevelsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MatchsPeopleId")
-                        .HasColumnType("int");
-
                     b.Property<int>("Scored")
                         .HasColumnType("int");
 
                     b.HasKey("LevelId", "MatchId");
 
-                    b.HasIndex("LevelsId");
-
-                    b.HasIndex("MatchsPeopleId");
+                    b.HasIndex("MatchId");
 
                     b.ToTable("LevelsxMatches");
                 });
@@ -527,11 +519,12 @@ namespace SIMYTSoacha.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProcedureId"));
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("Isdeleted")
                         .HasColumnType("bit");
-
-                    b.Property<int>("Procedure")
-                        .HasColumnType("int");
 
                     b.Property<int>("RequestId")
                         .HasColumnType("int");
@@ -909,13 +902,13 @@ namespace SIMYTSoacha.Migrations
                 {
                     b.HasOne("SIMYTSoacha.Model.Levels", "Levels")
                         .WithMany()
-                        .HasForeignKey("LevelsId")
+                        .HasForeignKey("LevelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SIMYTSoacha.Model.People", "Matchs")
+                    b.HasOne("SIMYTSoacha.Model.Matches", "Matchs")
                         .WithMany()
-                        .HasForeignKey("MatchsPeopleId")
+                        .HasForeignKey("MatchId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

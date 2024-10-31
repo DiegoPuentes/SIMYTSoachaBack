@@ -7,7 +7,7 @@ namespace SIMYTSoacha.Services
     {
         Task<IEnumerable<Procedures>> GetAllProceduresAsync();
         Task<Procedures> GetProceduresByIdAsync(int id);
-        Task<Procedures> CreateProceduresAsync(int p, int sid, int rid, bool isde);
+        Task<Procedures> CreateProceduresAsync(string p, int sid, int rid, bool isde);
         Task UpdateProceduresAsync(Procedures procedures);
         Task SoftDeleteProceduresAsync(int id);
     }
@@ -19,7 +19,7 @@ namespace SIMYTSoacha.Services
             repository = repositoryProce;
         }
 
-        public Task<Procedures> CreateProceduresAsync(int p, int sid, int rid, bool isde)
+        public Task<Procedures> CreateProceduresAsync(string p, int sid, int rid, bool isde)
         {
             return repository.CreateProceduresAsync(p, sid, rid, isde);
         }
