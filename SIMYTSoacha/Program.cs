@@ -89,10 +89,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin", builder =>
-        builder.WithOrigins("https://front-simyt.vercel.app/",
-        "https://front-simyt-diegopuentes-projects.vercel.app/",
-        "https://front-simyt-git-master-diegopuentes-projects.vercel.app/",
-        "http://localhost:3000/")
+        builder.WithOrigins("https://front-simyt.vercel.app",
+        "https://front-simyt-diegopuentes-projects.vercel.app",
+        "https://front-simyt-git-master-diegopuentes-projects.vercel.app",
+        "http://localhost:3000")
                .AllowCredentials()
                .AllowAnyHeader()
                .AllowAnyMethod());
