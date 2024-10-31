@@ -39,14 +39,15 @@ namespace SIMYTSoacha.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> CreateFines([FromForm] int id, int mid, int pid, bool isdeleted)
+        public async Task<ActionResult> CreateFines([FromBody] RequestFines request)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            Fines fine = await _finesService.CreateFinesAsync(id, mid, pid, isdeleted);
+            Fines fine = await _finesService.CreateFinesAsync(request.InfractionId, 
+                request.MimpositionId, request.MimpositionId, request.Isdeleted);
             return CreatedAtAction(nameof(GetFinesById), new { id = fine.FinesId }, fine);
         }
 
@@ -84,6 +85,14 @@ namespace SIMYTSoacha.Controllers
 
             await _finesService.SoftDeleteFinesAsync(id);
             return NoContent();
+        }
+
+        public class RequestFines
+        {
+            public int InfractionId { get; set; }
+            public int MimpositionId { get; set; }
+            public int ProcedureId { get; set; }
+            public bool Isdeleted { get; set; } = false;
         }
     }
 }

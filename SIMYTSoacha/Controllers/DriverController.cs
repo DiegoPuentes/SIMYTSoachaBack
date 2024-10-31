@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SIMYTSoacha.Model;
 using SIMYTSoacha.Services;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SIMYTSoacha.Controllers
 {
@@ -40,30 +41,17 @@ namespace SIMYTSoacha.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> CreateDrive([FromForm] int nlicense, int Eid, DateTime date,
-            int Sid, int Rid, int Pid, bool isdeleted)
+        public async Task<ActionResult> CreateDrive([FromBody] RequestDriver request)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var userTypeId = HttpContext.Session.GetInt32("UserTypeId");
-
-            if (userTypeId == null)
-            {
-                return Unauthorized("Por favor, inicia sesión para continuar.");
-            }
-
-            if (await _peopleService.PermissionAsync(userTypeId.Value, 1))
-            {
-                DriverLicenses driver = await _driverService.CreateDriverAsync(nlicense, Eid, date, Sid, Rid, Pid, isdeleted);
-                return CreatedAtAction(nameof(GetDriverById), new { id = driver.Id }, driver);
-            }
-            else
-            {
-                return BadRequest("No tienes permisos!");
-            }
+            DriverLicenses driver = await _driverService.CreateDriverAsync(request.Nlicense, 
+                request.EcenterId, request.DateIssue, request.StateId, request.RestrictionId, 
+                request.ProcedureId, request.Isdeleted);
+            return CreatedAtAction(nameof(GetDriverById), new { id = driver.Id }, driver);
 
         }
 
@@ -141,6 +129,17 @@ namespace SIMYTSoacha.Controllers
                     return Unauthorized("No tiene el permiso, para poder eliminar registros.");
                 }
             }
+        }
+
+        public class RequestDriver
+        {
+            public required int Nlicense { get; set; }
+            public required int EcenterId { get; set; }
+            public required DateTime DateIssue { get; set; }
+            public int StateId { get; set; }
+            public int RestrictionId { get; set; }
+            public int ProcedureId { get; set; }
+            public bool Isdeleted { get; set; } = false;
         }
     }
 }
