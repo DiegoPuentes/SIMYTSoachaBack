@@ -85,6 +85,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
+
 // Cors Policy
 builder.Services.AddCors(options =>
 {
@@ -96,6 +98,11 @@ builder.Services.AddCors(options =>
                .AllowCredentials()
                .AllowAnyHeader()
                .AllowAnyMethod());
+
+    options.AddPolicy("AllowAllOrigins", builder =>
+        builder.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader());
 });
 
 var app = builder.Build();
@@ -103,7 +110,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 
 app.UseSwagger();
-app.UseCors("AllowSpecificOrigin");
+app.UseCors("AllowAllOrigins");
 app.UseSwaggerUI();
 
 

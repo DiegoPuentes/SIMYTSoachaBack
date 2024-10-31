@@ -1,5 +1,6 @@
 
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
 using SIMYTSoacha.Model;
 using SIMYTSoacha.Services;
 
@@ -211,6 +212,7 @@ namespace SIMYTSoacha.Controllers
         }
 
         [HttpPost("Logout")]
+        [EnableCors("AllowSpecificOrigin")]
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();
