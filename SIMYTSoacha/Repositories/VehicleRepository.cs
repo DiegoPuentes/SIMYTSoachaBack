@@ -44,7 +44,7 @@ namespace SIMYTSoacha.Repositories
 
         public async Task<IEnumerable<Vehicles>> GetAllVehiclesAsync()
         {
-            return await context.Vehicles.Where(s => !s.Isdeleted).ToListAsync();
+            return await context.Vehicles.Where(s => !s.Isdeleted).Include(p => p.People).ToListAsync();
         }
 
         public async Task<Vehicles> GetVehiclesByIdAsync(int id)

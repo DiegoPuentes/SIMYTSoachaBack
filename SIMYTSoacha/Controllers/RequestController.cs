@@ -38,15 +38,15 @@ namespace SIMYTSoacha.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> CreateRequest([FromForm] int pid, DateTime date, int officer
-            , bool isde)
+        public async Task<ActionResult> CreateRequest([FromBody] Request request)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            Requests re = await _requestService.CreateRequestAsync(pid, date, officer, isde);
+            Requests re = await _requestService.CreateRequestAsync(request.PeopleId, request.RequestDate
+                , request.OfficerId, request.Isdeleted);
             return CreatedAtAction(nameof(GetRequestById), new { id = re.RequestId }, re);
         }
 
@@ -84,6 +84,14 @@ namespace SIMYTSoacha.Controllers
 
             await _requestService.SoftDeleteRequestsByIdAsync(id);
             return NoContent();
+        }
+
+        public class Request
+        {
+            public int PeopleId { get; set; }
+            public DateTime RequestDate { get; set; }
+            public int OfficerId { get; set; }
+            public bool Isdeleted { get; set; } = false;
         }
     }
 }

@@ -47,6 +47,10 @@ namespace SIMYTSoacha.Repositories
         {
             return await _simytDbContext.DriverLicenses
                 .Where(s => !s.Isdeleted)
+                .Include(e => e.Ecenters)
+                .Include(s => s.States)
+                .Include(r => r.Restrictions)
+                .Include(p => p.Procedures)
                 .ToListAsync();
         }
 

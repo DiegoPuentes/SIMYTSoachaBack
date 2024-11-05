@@ -44,7 +44,12 @@ namespace SIMYTSoacha.Repositories
         public async Task<IEnumerable<TrafficLicenses>> GetAllTrafficLicensesAsync()
         {
             return await context.TrafficLicenses
-                .Where(s => !s.Isdeleted).ToListAsync();
+                .Where(s => !s.Isdeleted)
+                .Include(s => s.States)
+                .Include(se => se.Services)
+                .Include(v => v.Vehicles)
+                .Include(p => p.Procedures)
+                .ToListAsync();
         }
 
         public async Task<TrafficLicenses> GetTrafficLicensesByIdAsync(int id)

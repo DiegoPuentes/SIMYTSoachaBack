@@ -41,6 +41,9 @@ namespace SIMYTSoacha.Repositories
         {
             return await _context.Fines
                 .Where(s => !s.Isdeleted)
+                .Include(i => i.Infractions)
+                .Include(m => m.Mimpositions)
+                .Include(p => p.Procedures)
                 .ToListAsync();
         }
 

@@ -57,8 +57,9 @@ namespace SIMYTSoacha.Repositories
         public async Task<IEnumerable<People>> GetAllPeopleAsync()
         {
             return await _context.People
-                .Where(s => !s.Isdeleted)
-                .ToListAsync();
+                .Where(s => !s.Isdeleted).Include(d => d.DocumentType).
+                Include(s => s.Sex).
+                Include(t => t.UserType).ToListAsync();
         }
         public async Task<People> GetSubjectByIdAsync(int id)
         {
