@@ -40,6 +40,7 @@ namespace SIMYTSoacha.Repositories
                 .Where(s => !s.IsDeleted)
                 .Include(l => l.Levels)
                 .Include(m => m.Matchs)
+                .ThenInclude(p => p.People)
                 .ToListAsync();
         }
     }
