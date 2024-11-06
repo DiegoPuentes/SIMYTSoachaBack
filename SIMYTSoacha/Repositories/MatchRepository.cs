@@ -47,7 +47,10 @@ namespace SIMYTSoacha.Repositories
 
         public async Task<IEnumerable<Matches>> GetallMatchAsync()
         {
-            return await _context.Matches.Where(s => !s.IsDeleted).ToListAsync();
+            return await _context.Matches
+                .Where(s => !s.IsDeleted)
+                .Include(p => p.People)
+                .ToListAsync();
         }
 
         public async Task<Matches> GetMatchesByIdAsync(int id)

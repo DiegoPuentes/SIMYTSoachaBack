@@ -38,6 +38,8 @@ namespace SIMYTSoacha.Repositories
         {
             return await context.LevelsxMatches
                 .Where(s => !s.IsDeleted)
+                .Include(l => l.Levels)
+                .Include(m => m.Matchs)
                 .ToListAsync();
         }
     }

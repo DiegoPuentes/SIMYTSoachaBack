@@ -36,6 +36,8 @@ namespace SIMYTSoacha.Repositories
         {
             return await context.UsersXPermissions.
                 Where(s => !s.Isdeleted)
+                .Include(s => s.UsersType)
+                .Include(p => p.Permissions)
                 .ToListAsync();
         }
     }

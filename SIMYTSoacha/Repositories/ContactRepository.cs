@@ -29,6 +29,8 @@ namespace SIMYTSoacha.Repositories
         {
             return await _context.Contacts
                 .Where(s => !s.Isdeleted)
+                .Include(t => t.TypesContacts)
+                .Include(p => p.People)
                 .ToListAsync();
         }
 

@@ -27,6 +27,8 @@ namespace SIMYTSoacha.Repositories
         {
             return await _context.ModelXLines
                 .Where(s => !s.Isdeleted)
+                .Include(l => l.Line)
+                .Include(m => m.Models)
                 .ToListAsync();
         }
     }

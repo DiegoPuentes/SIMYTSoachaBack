@@ -40,6 +40,8 @@ namespace SIMYTSoacha.Repositories
         {
             return await _simytDbContext.Requests
                 .Where(s => !s.Isdeleted)
+                .Include(s => s.People)
+                .Include(p => p.Officer)
                 .ToListAsync();
         }
 
