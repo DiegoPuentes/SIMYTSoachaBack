@@ -51,6 +51,8 @@ namespace SIMYTSoacha.Repositories
                 .Include(s => s.States)
                 .Include(r => r.Restrictions)
                 .Include(p => p.Procedures)
+                .ThenInclude(r => r.Requests)
+                .ThenInclude(p => p.People)
                 .ToListAsync();
         }
 

@@ -8,7 +8,7 @@ namespace SIMYTSoacha.Services
         Task<IEnumerable<Fines>> GetAllFinesAsync();
         Task<Fines> GetFinesByIdAsync(int id);
         Task<Fines> CreateFinesAsync(int id, int mid, int pid, bool isdeleted);
-        Task UpdateFinesAsync(int id, int mid, int pid, bool isdeleted);
+        Task UpdateFinesAsync(Fines fines);
         Task SoftDeleteFinesAsync(int id);
     }
     public class FinesService : IFinesService
@@ -39,9 +39,9 @@ namespace SIMYTSoacha.Services
             return _finesRepository.SoftDeleteFinesAsync(id);    
         }
 
-        public Task UpdateFinesAsync(int id, int mid, int pid, bool isdeleted)
+        public Task UpdateFinesAsync(Fines fines)
         {
-            return _finesRepository.UpdateFinesAsync(id, mid, pid, isdeleted);  
+            return _finesRepository.UpdateFinesAsync(fines);  
         }
     }
 }

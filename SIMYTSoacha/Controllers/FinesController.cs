@@ -55,8 +55,7 @@ namespace SIMYTSoacha.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> UpdateFines(int id, [FromForm] int infractionid, int mimpositionid, 
-            int procedureid, bool isdeleted)
+        public async Task<IActionResult> UpdateFines(int id, [FromBody] RequestFines request)
         {
 
             var existingFines = await _finesService.GetFinesByIdAsync(id);
@@ -65,12 +64,12 @@ namespace SIMYTSoacha.Controllers
                 return NotFound();
             }
 
-            existingFines.InfractionId = infractionid;
-            existingFines.MimpositionId = mimpositionid;
-            existingFines.ProcedureId = procedureid;
-            existingFines.Isdeleted = isdeleted;
+            existingFines.InfractionId = request.InfractionId;
+            existingFines.MimpositionId = request.MimpositionId;
+            existingFines.ProcedureId = request.ProcedureId;
+            existingFines.Isdeleted = request.Isdeleted;
 
-            await _finesService.UpdateFinesAsync(infractionid, mimpositionid, procedureid, isdeleted);
+            await _finesService.UpdateFinesAsync(existingFines);
             return NoContent();
         }
 

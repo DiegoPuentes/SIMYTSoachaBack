@@ -25,16 +25,8 @@ namespace SIMYTSoacha.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<People>>> GetAllPeople()
         {
-            var userTypeId = HttpContext.Session.GetInt32("UserTypeId");
-            if (userTypeId == null)
-            {
-                return Unauthorized("Por favor, inicia sesión para continuar.");
-            }
-            else
-            {
-                var people = await _peopleService.GetAllPeoplesAsync();
-                return Ok(people);
-            }
+            var people = await _peopleService.GetAllPeoplesAsync();
+            return Ok(people);
         }
 
         [HttpGet("{id}")]
@@ -42,20 +34,13 @@ namespace SIMYTSoacha.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<People>> GetPeopleById(int id)
         {
-            var userTypeId = HttpContext.Session.GetInt32("UserTypeId");
-            if (userTypeId == null)
+            
+            var people = await _peopleService.GetPeopleByIdAsync(id);
+            if (people == null)
             {
-                return Unauthorized("Por favor, inicia sesión para continuar.");
+                return NotFound();
             }
-            else
-            {
-                var people = await _peopleService.GetPeopleByIdAsync(id);
-                if (people == null)
-                {
-                    return NotFound();
-                }
-                return Ok(people);
-            }
+            return Ok(people);
         }
 
 

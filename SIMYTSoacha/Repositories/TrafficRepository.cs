@@ -49,6 +49,8 @@ namespace SIMYTSoacha.Repositories
                 .Include(se => se.Services)
                 .Include(v => v.Vehicles)
                 .Include(p => p.Procedures)
+                .ThenInclude(r => r.Requests)
+                .ThenInclude(p => p.People)
                 .ToListAsync();
         }
 
