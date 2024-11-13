@@ -16,6 +16,7 @@ namespace SIMYTSoacha.Controllers
         }
 
         [HttpGet]
+        [EnableCors("AllowAllOrigins")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<Matches>>> GetAllMatch()
         {
