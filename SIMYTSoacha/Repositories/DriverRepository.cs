@@ -8,7 +8,7 @@ namespace SIMYTSoacha.Repositories
     {
         Task<IEnumerable<DriverLicenses>> GetAllDriverAsync();
         Task<DriverLicenses> GetDriverByIdAsync(int id);
-        Task<DriverLicenses> CreateDriverAsync(int nlicense, int Eid, DateTime date, 
+        Task<DriverLicenses> CreateDriverAsync(string nlicense, int Eid, DateTime date, 
             int Sid, int Rid, int Pid, bool isdeleted);
         Task UpdateDriverAsync(DriverLicenses driverLicenses);
         Task SoftDeleteDriverAsync(int id);
@@ -21,7 +21,7 @@ namespace SIMYTSoacha.Repositories
             _simytDbContext = simytDbContext;
         }
 
-        public async Task<DriverLicenses> CreateDriverAsync(int nlicense, int Eid, DateTime date,
+        public async Task<DriverLicenses> CreateDriverAsync(string nlicense, int Eid, DateTime date,
             int Sid, int Rid, int Pid, bool isdeleted)
         {
             DriverLicenses driver = new DriverLicenses 

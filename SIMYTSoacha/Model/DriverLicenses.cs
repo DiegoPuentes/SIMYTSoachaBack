@@ -8,7 +8,7 @@ namespace SIMYTSoacha.Model
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public required int Nlicense {  get; set; }
+        public required string Nlicense {  get; set; }
         public required int EcenterId { get; set; }
         [ForeignKey("EcenterId")]
         public required virtual Ecenters Ecenters { get; set; }

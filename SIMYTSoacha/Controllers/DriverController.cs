@@ -100,7 +100,7 @@ namespace SIMYTSoacha.Controllers
 
         public class RequestDriver
         {
-            public required int Nlicense { get; set; }
+            public required string Nlicense { get; set; }
             public required int EcenterId { get; set; }
             public required DateTime DateIssue { get; set; }
             public int StateId { get; set; }

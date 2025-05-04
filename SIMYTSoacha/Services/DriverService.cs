@@ -7,7 +7,7 @@ namespace SIMYTSoacha.Services
     {
         Task<IEnumerable<DriverLicenses>> GetAllDriverAsync();
         Task<DriverLicenses> GetDriverByIdAsync(int id);
-        Task<DriverLicenses> CreateDriverAsync(int nlicense, int Eid, DateTime date,
+        Task<DriverLicenses> CreateDriverAsync(string nlicense, int Eid, DateTime date,
             int Sid, int Rid, int Pid, bool isdeleted);
         Task UpdateDriverAsync(DriverLicenses driverLicenses);
         Task SoftDeleteDriverAsync(int id);
@@ -24,7 +24,7 @@ namespace SIMYTSoacha.Services
             _peopleRepository = peopleRepository;
         }
 
-        public Task<DriverLicenses> CreateDriverAsync(int nlicense, int Eid, DateTime date,
+        public Task<DriverLicenses> CreateDriverAsync(string nlicense, int Eid, DateTime date,
             int Sid, int Rid, int Pid, bool isdeleted)
         {
             return _driverRepository.CreateDriverAsync(nlicense, Eid, date, Sid, Rid, Pid, isdeleted);

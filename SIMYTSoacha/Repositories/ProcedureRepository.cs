@@ -43,6 +43,8 @@ namespace SIMYTSoacha.Repositories
                 .Include(r => r.States)
                 .Include(r => r.Requests)
                 .ThenInclude(p => p.People)
+                .Include(r => r.Requests)
+                .ThenInclude(p => p.Officer)
                 .ToListAsync();
         }
 
